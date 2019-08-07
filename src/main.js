@@ -7,31 +7,7 @@ const ContainerClass = {
   BOARD_TASKS: `board__tasks`
 };
 
-const mainElement = document.querySelector(`.${ContainerClass.MAIN}`);
-const controlElement = mainElement.querySelector(`.${ContainerClass.CONTROL}`);
-
-/**
- * Функция получение HTML-кода шаблона элемента
- *
- * @param {string} templateName название шаблона элемента
- *
- * @return {string} HTML-код шаблона элемента
- */
-const MakeElement = (templateName) => templateMaps[templateName];
-
-/**
- * Функция добавление кода элемента в контейнер
- *
- * @param {HTMLElement} container контейнер, в который необходимо добавить элемент
- * @param {string} element позиция вставки злемента методом insertAdjacentHTML
- * @param {string} position HTML-код элемента
- */
-const renderElement = (container, element, position = `beforeend`) => {
-  container.insertAdjacentHTML(position, element);
-};
-
-const templateMaps = {
-  MENU: `<section class="control__btn-wrap">
+const makeMenu = () => `<section class="control__btn-wrap">
           <input
             type="radio"
             name="control"
@@ -58,8 +34,9 @@ const templateMaps = {
           <label for="control__statistic" class="control__label"
             >STATISTICS</label
           >
-        </section>`,
-  SEARCH: `<section class="main__search search container">
+        </section>`;
+
+const makeSearch = () => `<section class="main__search search container">
         <input
           type="text"
           id="search__input"
@@ -67,8 +44,9 @@ const templateMaps = {
           placeholder="START TYPING — SEARCH BY WORD, #HASHTAG OR DATE"
         />
         <label class="visually-hidden" for="search__input">Search</label>
-      </section>`,
-  MAIN_FILTER: `<section class="main__filter filter container">
+      </section>`;
+
+const makeMainFilter = () => `<section class="main__filter filter container">
         <input
           type="radio"
           id="filter__all"
@@ -135,17 +113,21 @@ const templateMaps = {
         <label for="filter__archive" class="filter__label"
           >Archive <span class="filter__archive-count">115</span></label
         >
-      </section>`,
-  BOARD_CONTAINER: `<section class="board container">
-</section>`,
-  BOARD_FILTER: `<div class="board__filter-list">
+      </section>`;
+
+const makeBoardContainer = () => `<section class="board container">
+</section>`;
+
+const makeBoardFilter = () => `<div class="board__filter-list">
           <a href="#" class="board__filter">SORT BY DEFAULT</a>
           <a href="#" class="board__filter">SORT BY DATE up</a>
           <a href="#" class="board__filter">SORT BY DATE down</a>
-        </div>`,
-  BOARD_TASKS: `<div class="board__tasks">
-</div>`,
-  CARD_TASK: `<article class="card card--black">
+        </div>`;
+
+const makeBoardTasks = () => `<div class="board__tasks">
+</div>`;
+
+const makeCardTask = () => `<article class="card card--black">
             <div class="card__form">
               <div class="card__inner">
                 <div class="card__control">
@@ -209,8 +191,9 @@ const templateMaps = {
                 </div>
               </div>
             </div>
-          </article>`,
-  CARD_TASK_EDIT: `<article class="card card--edit card--black">
+          </article>`;
+
+const makeCardTaskEdit = () => `<article class="card card--edit card--black">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -429,20 +412,34 @@ const templateMaps = {
                   <button class="card__delete" type="button">delete</button>
                 </div>
               </div>
-            </form>`,
-  MORE_BTN: `<button class="load-more" type="button">load more</button>`
+            </form>`;
+
+const makeMoreBtn = () => `<button class="load-more" type="button">load more</button>`;
+
+const elements = {
+  makeMenu: `CONTROL`,
+  makeSearch: `MAIN`,
+  makeMainFilter: `MAIN`,
+  makeBoardContainer: `MAIN`,
+  makeBoardFilter: `BOARD`,
+  makeBoardTasks: `BOARD`,
+  makeCardTaskEdit: `BOARD_TASKS`,
+  makeCardTask: `BOARD_TASKS`,
+  makeMoreBtn: `BOARD`
 };
 
-renderElement(controlElement, templateMaps.MENU);
-renderElement(mainElement, templateMaps.SEARCH);
-renderElement(mainElement, templateMaps.MAIN_FILTER);
-renderElement(mainElement, templateMaps.BOARD_CONTAINER);
-const boardElement = mainElement.querySelector(`.${ContainerClass.BOARD}`);
-renderElement(boardElement, templateMaps.BOARD_FILTER);
-renderElement(boardElement, templateMaps.BOARD_TASKS);
-const boardTasksElement = mainElement.querySelector(`.${ContainerClass.BOARD_TASKS}`);
-renderElement(boardTasksElement, templateMaps.CARD_TASK_EDIT);
-renderElement(boardTasksElement, templateMaps.CARD_TASK);
-renderElement(boardTasksElement, templateMaps.CARD_TASK);
-renderElement(boardTasksElement, templateMaps.CARD_TASK);
-renderElement(boardElement, templateMaps.MORE_BTN);
+/**
+ * Функция добавления элементов на страницу
+ *
+ * @param {$ObjMap} map объект с информацией о функциях, возвращающих элементы и классах контейнеров, в которые эти элементы нужно отрисовать
+ */
+const renderContent = (map) => {
+  for (const [fn, className] of Object.entries(map)) {
+    console.log(fn);
+    console.log(className);
+
+    document.querySelector(`.${ContainerClass[className]}`).insertAdjacentHTML(`beforeend`, fn());
+  }
+};
+
+renderContent(elements);
