@@ -446,3 +446,4 @@ renderElement(boardTasksElement, templateMaps.CARD_TASK_EDIT);
 renderElement(boardTasksElement, templateMaps.CARD_TASK);
 renderElement(boardTasksElement, templateMaps.CARD_TASK);
 renderElement(boardTasksElement, templateMaps.CARD_TASK);
+renderElement(boardElement, templateMaps.MORE_BTN);
