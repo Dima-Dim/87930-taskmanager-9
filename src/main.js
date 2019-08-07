@@ -7,7 +7,7 @@ const ContainerClass = {
   BOARD_TASKS: `board__tasks`
 };
 
-const makeMenu = () => `<section class="control__btn-wrap">
+const getMarkupMenu = () => `<section class="control__btn-wrap">
           <input
             type="radio"
             name="control"
@@ -36,7 +36,7 @@ const makeMenu = () => `<section class="control__btn-wrap">
           >
         </section>`;
 
-const makeSearch = () => `<section class="main__search search container">
+const getMarkupSearch = () => `<section class="main__search search container">
         <input
           type="text"
           id="search__input"
@@ -46,7 +46,7 @@ const makeSearch = () => `<section class="main__search search container">
         <label class="visually-hidden" for="search__input">Search</label>
       </section>`;
 
-const makeMainFilter = () => `<section class="main__filter filter container">
+const getMarkupFilter = () => `<section class="main__filter filter container">
         <input
           type="radio"
           id="filter__all"
@@ -115,85 +115,19 @@ const makeMainFilter = () => `<section class="main__filter filter container">
         >
       </section>`;
 
-const makeBoardContainer = () => `<section class="board container">
+const getMarkupBoardContainer = () => `<section class="board container">
 </section>`;
 
-const makeBoardFilter = () => `<div class="board__filter-list">
+const getMarkupBoardFilter = () => `<div class="board__filter-list">
           <a href="#" class="board__filter">SORT BY DEFAULT</a>
           <a href="#" class="board__filter">SORT BY DATE up</a>
           <a href="#" class="board__filter">SORT BY DATE down</a>
         </div>`;
 
-const makeBoardTasks = () => `<div class="board__tasks">
+const getMarkupBoardTasks = () => `<div class="board__tasks">
 </div>`;
 
-const makeCardTask = () => `<article class="card card--black">
-            <div class="card__form">
-              <div class="card__inner">
-                <div class="card__control">
-                  <button type="button" class="card__btn card__btn--edit">
-                    edit
-                  </button>
-                  <button type="button" class="card__btn card__btn--archive">
-                    archive
-                  </button>
-                  <button
-                    type="button"
-                    class="card__btn card__btn--favorites card__btn--disabled"
-                  >
-                    favorites
-                  </button>
-                </div>
-
-                <div class="card__color-bar">
-                  <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
-
-                <div class="card__textarea-wrap">
-                  <p class="card__text">Example default task with default color.</p>
-                </div>
-
-                <div class="card__settings">
-                  <div class="card__details">
-                    <div class="card__dates">
-                      <div class="card__date-deadline">
-                        <p class="card__input-deadline-wrap">
-                          <span class="card__date">23 September</span>
-                          <span class="card__time">11:15 PM</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #todo
-                          </span>
-                        </span>
-
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #personal
-                          </span>
-                        </span>
-
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #important
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>`;
-
-const makeCardTaskEdit = () => `<article class="card card--edit card--black">
+const getMarkupBoardTaskEdit = () => `<article class="card card--edit card--black">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -414,31 +348,141 @@ const makeCardTaskEdit = () => `<article class="card card--edit card--black">
               </div>
             </form>`;
 
-const makeMoreBtn = () => `<button class="load-more" type="button">load more</button>`;
+const getMarkupBoardTask = () => `<article class="card card--black">
+            <div class="card__form">
+              <div class="card__inner">
+                <div class="card__control">
+                  <button type="button" class="card__btn card__btn--edit">
+                    edit
+                  </button>
+                  <button type="button" class="card__btn card__btn--archive">
+                    archive
+                  </button>
+                  <button
+                    type="button"
+                    class="card__btn card__btn--favorites card__btn--disabled"
+                  >
+                    favorites
+                  </button>
+                </div>
+
+                <div class="card__color-bar">
+                  <svg class="card__color-bar-wave" width="100%" height="10">
+                    <use xlink:href="#wave"></use>
+                  </svg>
+                </div>
+
+                <div class="card__textarea-wrap">
+                  <p class="card__text">Example default task with default color.</p>
+                </div>
+
+                <div class="card__settings">
+                  <div class="card__details">
+                    <div class="card__dates">
+                      <div class="card__date-deadline">
+                        <p class="card__input-deadline-wrap">
+                          <span class="card__date">23 September</span>
+                          <span class="card__time">11:15 PM</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="card__hashtag">
+                      <div class="card__hashtag-list">
+                        <span class="card__hashtag-inner">
+                          <span class="card__hashtag-name">
+                            #todo
+                          </span>
+                        </span>
+
+                        <span class="card__hashtag-inner">
+                          <span class="card__hashtag-name">
+                            #personal
+                          </span>
+                        </span>
+
+                        <span class="card__hashtag-inner">
+                          <span class="card__hashtag-name">
+                            #important
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>`;
+
+const getMarkupMoreBtn = () => `<button class="load-more" type="button">load more</button>`;
 
 const elements = {
-  makeMenu: `CONTROL`,
-  makeSearch: `MAIN`,
-  makeMainFilter: `MAIN`,
-  makeBoardContainer: `MAIN`,
-  makeBoardFilter: `BOARD`,
-  makeBoardTasks: `BOARD`,
-  makeCardTaskEdit: `BOARD_TASKS`,
-  makeCardTask: `BOARD_TASKS`,
-  makeMoreBtn: `BOARD`
+  menu: {
+    container: `CONTROL`,
+    markup: getMarkupMenu,
+    amount: 1
+  },
+  search: {
+    container: `MAIN`,
+    markup: getMarkupSearch,
+    amount: 1
+  },
+  filter: {
+    container: `MAIN`,
+    markup: getMarkupFilter,
+    amount: 1
+  },
+  boardContainer: {
+    container: `MAIN`,
+    markup: getMarkupBoardContainer,
+    amount: 1
+  },
+  boardFilter: {
+    container: `BOARD`,
+    markup: getMarkupBoardFilter,
+    amount: 1
+  },
+  boardTasks: {
+    container: `BOARD`,
+    markup: getMarkupBoardTasks,
+    amount: 1
+  },
+  cardTaskEdit: {
+    container: `BOARD_TASKS`,
+    markup: getMarkupBoardTaskEdit,
+    amount: 1
+  },
+  cardTask: {
+    container: `BOARD_TASKS`,
+    markup: getMarkupBoardTask,
+    amount: 3
+  },
+  moreBtn: {
+    container: `BOARD`,
+    markup: getMarkupMoreBtn,
+    amount: 1
+  }
 };
 
 /**
- * Функция добавления элементов на страницу
+ * Функция для добавления HTML-кода элементов на страницу
  *
- * @param {$ObjMap} map объект с информацией о функциях, возвращающих элементы и классах контейнеров, в которые эти элементы нужно отрисовать
+ * @param {string} containerClassName CSS-класс контейнера, в который необходимо добавить HTML-код элемента
+ * @param {string} content HTML-код, который нужно добавить в разметку страницы
  */
-const renderContent = (map) => {
-  for (const [fn, className] of Object.entries(map)) {
-    console.log(fn);
-    console.log(className);
+const renderElement = (containerClassName, content) => {
+  document.querySelector(`.${ContainerClass[containerClassName]}`).insertAdjacentHTML(`beforeend`, content);
+};
 
-    document.querySelector(`.${ContainerClass[className]}`).insertAdjacentHTML(`beforeend`, fn());
+/**
+ * Функция для обработки объекта с информацией об элементах, которые необходимо добавить в разметку страницы
+ *
+ * @param {$ObjMap} obj объект с информацией об элементах которые нужно отрисовать
+ */
+const renderContent = (obj) => {
+  for (const [, item] of Object.entries(obj)) {
+    const markup = Array(item[`amount`]).fill(item[`markup`]()).join(``);
+    renderElement(item[`container`], markup);
   }
 };
 
