@@ -12,20 +12,19 @@ const controlElement = mainElement.querySelector(`.${ContainerClass.CONTROL}`);
 
 /**
  * Функция получение HTML-кода шаблона элемента
- * @param templateName {string} название шаблона элемента
  *
- * @returns {string} HTML-код шаблона элемента
+ * @param {string} templateName название шаблона элемента
+ *
+ * @return {string} HTML-код шаблона элемента
  */
 const MakeElement = (templateName) => templateMaps[templateName];
 
 /**
  * Функция добавление кода элемента в контейнер
  *
- * @param container {HTMLElement} контейнер, в который необходимо добавить элемент
- * @param position {string} позиция вставки злемента методом insertAdjacentHTML
- * @param element {string} HTML-код элемента
- *
- * @returns {*|ActiveX.IXMLDOMNode}
+ * @param {HTMLElement} container контейнер, в который необходимо добавить элемент
+ * @param {string} element позиция вставки злемента методом insertAdjacentHTML
+ * @param {string} position HTML-код элемента
  */
 const renderElement = (container, element, position = `beforeend`) => {
   container.insertAdjacentHTML(position, element);
