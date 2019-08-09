@@ -1,4 +1,4 @@
-# Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
+# Учебный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Гуляев](https://up.htmlacademy.ru/ecmascript/9/user/87930).
 * Наставник: [Дмитрий Мирошниченко](https://htmlacademy.ru/profile/id591417).
