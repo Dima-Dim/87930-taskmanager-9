@@ -1,3 +1,8 @@
+/**
+ * Функция, возвращающая разметку поиска
+ *
+ * @return {string}
+ */
 export const getMarkupSearch = () => `<section class="main__search search container">
         <input
           type="text"

@@ -1,3 +1,8 @@
+/**
+ * Функция, возвращающая разметку блока меню
+ *
+ * @return {string}
+ */
 export const getMarkupMenu = () => `<section class="control__btn-wrap">
           <input
             type="radio"
