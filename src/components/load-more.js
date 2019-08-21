@@ -1,14 +1,36 @@
 import {moreTasks} from "../main";
 import {LOAD_MORE_COUNT} from "./config";
+import {createElement, renderElement} from "./utils";
+
+class MoreBtn {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<button class="load-more" type="button">load more</button>`;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+export const renderMoreBtn = (container, content) => {
+  const moreBtn = new MoreBtn(content);
+
+  renderElement(container, moreBtn.getElement());
+};
 
 let loadMoreBtnElement;
-
-/**
- * Функция, возвращающая разметку кнопки Load more
- *
- * @return {string}
- */
-export const getMarkupMoreBtn = () => `<button class="load-more" type="button">load more</button>`;
 
 /**
  * Функция для обработки события клика на кнопке Load more

@@ -1,9 +1,12 @@
-/**
- * Функция, возвращающая разметку поиска
- *
- * @return {string}
- */
-export const getMarkupSearch = () => `<section class="main__search search container">
+import {createElement, renderElement} from "./utils";
+
+class Search {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<section class="main__search search container">
         <input
           type="text"
           id="search__input"
@@ -12,3 +15,23 @@ export const getMarkupSearch = () => `<section class="main__search search contai
         />
         <label class="visually-hidden" for="search__input">Search</label>
       </section>`;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+export const renderSearch = (container, content) => {
+  const search = new Search(content);
+
+  renderElement(container, search.getElement());
+};

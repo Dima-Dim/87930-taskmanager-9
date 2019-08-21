@@ -1,9 +1,12 @@
-/**
- * Функция, возвращающая разметку блока меню
- *
- * @return {string}
- */
-export const getMarkupMenu = () => `<section class="control__btn-wrap">
+import {createElement, renderElement} from "./utils";
+
+class Menu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<section class="control__btn-wrap">
           <input
             type="radio"
             name="control"
@@ -31,3 +34,23 @@ export const getMarkupMenu = () => `<section class="control__btn-wrap">
             >STATISTICS</label
           >
         </section>`;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+export const renderMenu = (container, content) => {
+  const menu = new Menu(content);
+
+  renderElement(container, menu.getElement());
+};
