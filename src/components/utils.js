@@ -68,7 +68,7 @@ export const createElement = (template) => {
  * Функция для добавления DOM-элементов на страницу
  *
  * @param {string} containerClassName CSS-класс контейнера, в который необходимо добавить DOM-элемент
- * @param {string} element DOM-элемент, который нужно добавить в разметку страницы
+ * @param {Element} element DOM-элемент, который нужно добавить в страницу
  * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
  */
 export const renderElement = (containerClassName, element, position = `append`) => {
@@ -84,6 +84,11 @@ export const renderElement = (containerClassName, element, position = `append`) 
   }
 };
 
+/**
+ * Функция для удаления DOM-элемента со страницы
+ *
+ * @param {Element} element DOM-элемент, который нужно удалить со страницы
+ */
 export const unRenderElement = (element) => {
   element.parentNode.removeChild(element);
 };
