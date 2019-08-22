@@ -49,6 +49,12 @@ class Menu {
   }
 }
 
+/**
+ * Функция для создания экземпляра класса и отправка его на рендеринг
+ *
+ * @param {string} container Информация о контейнере, в который необходимо поместить элемент
+ * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
+ */
 export const renderMenu = (container, content) => {
   const menu = new Menu(content);
 
