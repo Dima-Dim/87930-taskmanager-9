@@ -1,4 +1,4 @@
-import {locales, timeFormat} from "./config";
+import {locales, timeFormat, ContainerClass} from "./config";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -56,8 +56,6 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
-
-import {ContainerClass} from "./config";
 
 /**
  * Функция для добавления HTML-кода элементов на страницу
