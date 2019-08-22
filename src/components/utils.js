@@ -50,6 +50,13 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
  */
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
 
+/**
+ * Функция для изготовления DOM-элемента из строки
+ *
+ * @param {string} template HTML-код
+ *
+ * @return {ChildNode}
+ */
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -58,11 +65,11 @@ export const createElement = (template) => {
 };
 
 /**
- * Функция для добавления HTML-кода элементов на страницу
+ * Функция для добавления DOM-элементов на страницу
  *
- * @param {string} containerClassName CSS-класс контейнера, в который необходимо добавить HTML-код элемента
- * @param {string} element HTML-код, который нужно добавить в разметку страницы
- * @param {"append"|"prepend"} position Позиция вставки элемента
+ * @param {string} containerClassName CSS-класс контейнера, в который необходимо добавить DOM-элемент
+ * @param {string} element DOM-элемент, который нужно добавить в разметку страницы
+ * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
  */
 export const renderElement = (containerClassName, element, position = `append`) => {
   const container = document.querySelector(`.${ContainerClass[containerClassName]}`);
