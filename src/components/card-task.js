@@ -87,19 +87,24 @@ export const renderTask = (container, content) => {
   content.forEach((it) => {
     const task = new Task(it);
     const taskEdit = new TaskEdit(it);
+    const cardEditBtn = task.getElement().querySelector(`.${ContainerClass.CARD_EDIT_BTN}`)
+    const cardEditTextAreaBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_EDIT_TEXTAREA}`);
+    const cardSaveBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`);
+    const cardDeleteBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_DELETE_BTN}`);
 
     const closingCardEditingHandler = () => {
       document.querySelector(`.${ContainerClass[container]}`).replaceChild(task.getElement(), taskEdit.getElement());
-      taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`).removeEventListener(`click`, onClickSaveBtn);
-      taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`).removeEventListener(`click`, onClickDeleteBtn);
+      cardSaveBtn.removeEventListener(`click`, onClickSaveBtn);
+      cardSaveBtn.removeEventListener(`click`, onClickDeleteBtn);
       document.removeEventListener(`keydown`, onEscDownTaskEdit);
       document.removeEventListener(`click`, onClickDifferentEditTask);
     };
 
     const openingCardEditingHandler = () => {
       document.querySelector(`.${ContainerClass[container]}`).replaceChild(taskEdit.getElement(), task.getElement());
-      taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`).addEventListener(`click`, onClickSaveBtn);
-      taskEdit.getElement().querySelector(`.${ContainerClass.CARD_DELETE_BTN}`).addEventListener(`click`, onClickDeleteBtn);
+      cardEditTextAreaBtn.addEventListener(`focus`, onFocusTextArea);
+      cardSaveBtn.addEventListener(`click`, onClickSaveBtn);
+      cardDeleteBtn.addEventListener(`click`, onClickDeleteBtn);
       document.addEventListener(`keydown`, onEscDownTaskEdit);
       document.addEventListener(`click`, onClickDifferentEditTask);
     };
@@ -109,6 +114,18 @@ export const renderTask = (container, content) => {
       if (key === KEY_CODER.ESC) {
         closingCardEditingHandler();
       }
+    };
+
+    const onFocusTextArea = () => {
+      cardEditTextAreaBtn.removeEventListener(`focus`, onFocusTextArea);
+      document.removeEventListener(`keydown`, onEscDownTaskEdit);
+      cardEditTextAreaBtn.addEventListener(`blur`, onBlurTextArea);
+    };
+
+    const onBlurTextArea = () => {
+      cardEditTextAreaBtn.removeEventListener(`blur`, onBlurTextArea);
+      document.addEventListener(`keydown`, onEscDownTaskEdit);
+      cardEditTextAreaBtn.addEventListener(`focus`, onFocusTextArea);
     };
 
     const onClickDifferentEditTask = (evt) => {
@@ -133,7 +150,7 @@ export const renderTask = (container, content) => {
       task.removeElement();
     };
 
-    task.getElement().querySelector(`.${ContainerClass.CARD_EDIT_BTN}`).addEventListener(`click`, onClickTask);
+    cardEditBtn.addEventListener(`click`, onClickTask);
 
     renderElement(container, task.getElement());
   });
