@@ -1,10 +1,6 @@
-import {createElement, renderElement} from "./utils";
+import {elementTemplate} from "./utils";
 
-class Search {
-  constructor() {
-    this._element = null;
-  }
-
+export class Search extends elementTemplate {
   getTemplate() {
     return `<section class="main__search search container">
         <input
@@ -16,22 +12,4 @@ class Search {
         <label class="visually-hidden" for="search__input">Search</label>
       </section>`;
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
-
-export const renderSearch = (container, content) => {
-  const search = new Search(content);
-
-  renderElement(container, search.getElement());
-};

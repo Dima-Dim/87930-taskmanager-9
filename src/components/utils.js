@@ -1,4 +1,4 @@
-import {locales, timeFormat, ContainerClass} from "./config";
+import {locales, timeFormat} from "./config";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -51,6 +51,32 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
 
 /**
+ * Шаблон класса для создания элементов разметки страницы
+ */
+export class elementTemplate {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `Empty`;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    unRenderElement(this._element);
+    this._element = null;
+  }
+}
+
+/**
  * Функция для изготовления DOM-элемента из строки
  *
  * @param {string} template HTML-код
@@ -67,19 +93,31 @@ export const createElement = (template) => {
 /**
  * Функция для добавления DOM-элементов на страницу
  *
- * @param {string} containerClassName CSS-класс контейнера, в который необходимо добавить DOM-элемент
+ * @param {string|Element} container CSS-селектор контейнера, в который необходимо добавить DOM-элемент
  * @param {Element} element DOM-элемент, который нужно добавить в страницу
- * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
+ * @param {"append"|"prepend"|"insertBefore"|"insertAfter"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
  */
-export const renderElement = (containerClassName, element, position = `append`) => {
-  const container = document.querySelector(`.${ContainerClass[containerClassName]}`);
+export const renderElement = (container, element, position = `append`) => {
+  let parentContainer;
+
+  if (typeof container === `string`) {
+    parentContainer = document.querySelector(container);
+  } else {
+    parentContainer = container;
+  }
 
   switch (position) {
     case `append`:
-      container.append(element);
+      parentContainer.append(element);
       break;
     case `prepend`:
-      container.prepend(element);
+      parentContainer.prepend(element);
+      break;
+    case `insertBefore`:
+      parentContainer.parentNode.insertBefore(element, parentContainer);
+      break;
+    case `insertAfter`:
+      parentContainer.parentNode.insertBefore(element, parentContainer.nextSibling);
       break;
   }
 };
@@ -91,15 +129,4 @@ export const renderElement = (containerClassName, element, position = `append`) 
  */
 export const unRenderElement = (element) => {
   element.parentNode.removeChild(element);
-};
-
-/**
- * Функция для обработки объекта с информацией об элементах, которые необходимо добавить в страницу
- *
- * @param {$ObjMap} obj объект с информацией об элементах которые нужно добавить в страницу
- */
-export const renderElements = (obj) => {
-  for (const [, {container, content, renderFn}] of Object.entries(obj)) {
-    renderFn(container, content);
-  }
 };

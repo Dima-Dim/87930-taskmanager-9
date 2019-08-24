@@ -1,4 +1,4 @@
-import {createElement, renderElement} from "./utils";
+import {elementTemplate} from "./utils";
 
 /**
  * Функция для калькуляции количества задач, соответствующих условию
@@ -105,9 +105,9 @@ export const filterData = (tasks) => ([
   }
 ]);
 
-class Filter {
+export class Filter extends elementTemplate {
   constructor(tasks) {
-    this._element = null;
+    super();
     this._filtersData = filterData(tasks);
   }
 
@@ -127,22 +127,4 @@ class Filter {
   getTemplate() {
     return `<section class="main__filter filter container">${this._filtersData.map((it) => this.getMarkupFilter(it)).join(``)}<sections>`;
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
-
-export const renderFilters = (container, content) => {
-  const filter = new Filter(content);
-
-  renderElement(container, filter.getElement());
-};
