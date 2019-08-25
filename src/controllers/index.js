@@ -1,5 +1,4 @@
 import {AMOUNT_CARDS_TASK_FIRST_LOAD, ContainerClass, KeyCode, LOAD_MORE_COUNT} from "../components/config";
-import {renderElement} from "../components/utils";
 import {state} from "../main";
 import Menu from "../components/menu";
 import Search from "../components/search";
@@ -10,6 +9,7 @@ import BoardTasks from "../components/board-tasks";
 import Task from "../components/card-task";
 import MoreBtn from "../components/load-more";
 import TaskEdit from "../components/card-task-edit";
+import AbstractComponent from "../components/abstract-component";
 
 export class Index {
   constructor(tasks) {
@@ -24,12 +24,12 @@ export class Index {
   }
 
   init() {
-    renderElement(`.${ContainerClass.CONTROL}`, this._memu.getElement());
-    renderElement(`.${ContainerClass.MAIN}`, this._search.getElement());
-    renderElement(`.${ContainerClass.MAIN}`, this._filter.getElement());
-    renderElement(`.${ContainerClass.MAIN}`, this._boardContainer.getElement());
-    renderElement(`.${ContainerClass.BOARD}`, this._boardFilter.getElement());
-    renderElement(`.${ContainerClass.BOARD}`, this._boardTasks.getElement());
+    AbstractComponent.renderElement(`.${ContainerClass.CONTROL}`, this._memu.getElement());
+    AbstractComponent.renderElement(`.${ContainerClass.MAIN}`, this._search.getElement());
+    AbstractComponent.renderElement(`.${ContainerClass.MAIN}`, this._filter.getElement());
+    AbstractComponent.renderElement(`.${ContainerClass.MAIN}`, this._boardContainer.getElement());
+    AbstractComponent.renderElement(`.${ContainerClass.BOARD}`, this._boardFilter.getElement());
+    AbstractComponent.renderElement(`.${ContainerClass.BOARD}`, this._boardTasks.getElement());
     this._renderTask(`.${ContainerClass.BOARD_TASKS}`, this._tasks.slice(0, AMOUNT_CARDS_TASK_FIRST_LOAD));
     state.changeRenderCardTask = AMOUNT_CARDS_TASK_FIRST_LOAD;
     this._renderLoadMore();
@@ -104,14 +104,14 @@ export class Index {
 
       cardEditBtn.addEventListener(`click`, onClickTask);
 
-      renderElement(container, task.getElement());
+      AbstractComponent.renderElement(container, task.getElement());
     });
   }
 
   _renderLoadMore() {
     let loadMoreBtnElement = this._moreBtn.getElement();
 
-    renderElement(`.${ContainerClass.BOARD}`, loadMoreBtnElement);
+    AbstractComponent.renderElement(`.${ContainerClass.BOARD}`, loadMoreBtnElement);
 
     /**
      * Функция для отрисовки дополнительных задач по нажатию на кнопку Load more
