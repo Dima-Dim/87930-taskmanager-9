@@ -1,6 +1,6 @@
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
-export class Menu extends AbstractComponent {
+export default class Menu extends AbstractComponent {
   getTemplate() {
     return `<section class="control__btn-wrap">
           <input

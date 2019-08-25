@@ -1,15 +1,15 @@
 import {AMOUNT_CARDS_TASK_FIRST_LOAD, ContainerClass, KEY_CODE, LOAD_MORE_COUNT} from "../components/config";
 import {renderElement} from "../components/utils";
 import {state} from "../main";
-import {Menu} from "../components/menu";
-import {Search} from "../components/search";
-import {Filter} from "../components/filters";
-import {BoardContainer} from "../components/board-container";
-import {BoardFilter} from "../components/board-filter";
-import {BoardTasks} from "../components/board-tasks";
-import {Task} from "../components/card-task";
-import {MoreBtn} from "../components/load-more";
-import {TaskEdit} from "../components/card-task-edit";
+import Menu from "../components/menu";
+import Search from "../components/search";
+import Filter from "../components/filters";
+import BoardContainer from "../components/board-container";
+import BoardFilter from "../components/board-filter";
+import BoardTasks from "../components/board-tasks";
+import Task from "../components/card-task";
+import MoreBtn from "../components/load-more";
+import TaskEdit from "../components/card-task-edit";
 
 export class Index {
   constructor(tasks) {

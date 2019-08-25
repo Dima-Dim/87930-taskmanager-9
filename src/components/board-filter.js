@@ -1,6 +1,6 @@
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
-export class BoardFilter extends AbstractComponent {
+export default class BoardFilter extends AbstractComponent {
   getTemplate() {
     return `<div class="board__filter-list">
               <a href="#" class="board__filter">SORT BY DEFAULT</a>

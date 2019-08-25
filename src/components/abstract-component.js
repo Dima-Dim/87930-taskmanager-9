@@ -3,7 +3,7 @@ import {createElement, unRenderElement} from "./utils";
 /**
  * Шаблон класса для создания элементов разметки страницы
  */
-export class AbstractComponent {
+export default class AbstractComponent {
   constructor() {
     this._element = null;
   }

@@ -3,7 +3,7 @@ import {getMarkupCardColors} from "./card-color";
 import {getMarkupRepeatDays} from "./repeat-days";
 import {getMarkupHashtagsEdit} from "./hashtag-edit";
 
-export class TaskEdit {
+export default class TaskEdit {
   constructor({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) {
     this._element = null;
     this._description = description;
