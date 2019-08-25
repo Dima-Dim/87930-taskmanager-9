@@ -1,11 +1,12 @@
-import {getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp, createElement} from "./utils";
+import {getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
 import {getMarkupCardColors} from "./card-color";
 import {getMarkupRepeatDays} from "./repeat-days";
 import {getMarkupHashtagsEdit} from "./hashtag-edit";
+import AbstractComponent from "./abstract-component";
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractComponent {
   constructor({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) {
-    this._element = null;
+    super();
     this._description = description;
     this._dueDate = dueDate;
     this._repeatingDays = repeatingDays;
@@ -113,13 +114,5 @@ export default class TaskEdit {
                   </div>
                 </div>
               </form>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }
