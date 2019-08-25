@@ -51,32 +51,6 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
 
 /**
- * Шаблон класса для создания элементов разметки страницы
- */
-export class elementTemplate {
-  constructor() {
-    this._element = null;
-  }
-
-  getTemplate() {
-    return `Empty`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    unRenderElement(this._element);
-    this._element = null;
-  }
-}
-
-/**
  * Функция для изготовления DOM-элемента из строки
  *
  * @param {string} template HTML-код

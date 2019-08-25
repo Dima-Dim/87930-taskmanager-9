@@ -1,7 +1,8 @@
 import {getMarkupHashtags} from "./hashtag";
-import {elementTemplate, getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
+import {getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
+import {AbstractComponent} from "./abstract-component";
 
-export class Task extends elementTemplate {
+export class Task extends AbstractComponent {
   constructor({description, dueDate, repeatingDays, tags, color, isFavorite, isArchive}) {
     super();
     this._description = description;

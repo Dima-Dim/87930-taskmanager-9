@@ -1,6 +1,6 @@
-import {elementTemplate} from "./utils";
+import {AbstractComponent} from "./abstract-component";
 
-export class Search extends elementTemplate {
+export class Search extends AbstractComponent {
   getTemplate() {
     return `<section class="main__search search container">
         <input

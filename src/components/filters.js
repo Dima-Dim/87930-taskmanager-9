@@ -1,4 +1,4 @@
-import {elementTemplate} from "./utils";
+import {AbstractComponent} from "./abstract-component";
 
 /**
  * Функция для калькуляции количества задач, соответствующих условию
@@ -105,7 +105,7 @@ export const filterData = (tasks) => ([
   }
 ]);
 
-export class Filter extends elementTemplate {
+export class Filter extends AbstractComponent {
   constructor(tasks) {
     super();
     this._filtersData = filterData(tasks);
