@@ -46,6 +46,6 @@ export const tags = new Set([
 export const ALL_TASK_COUNT = 30;
 export const AMOUNT_CARDS_TASK_FIRST_LOAD = 8;
 export const LOAD_MORE_COUNT = 8;
-export const KEY_CODE = {
+export const KeyCode = {
   ESC: 27,
 };

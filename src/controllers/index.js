@@ -1,4 +1,4 @@
-import {AMOUNT_CARDS_TASK_FIRST_LOAD, ContainerClass, KEY_CODE, LOAD_MORE_COUNT} from "../components/config";
+import {AMOUNT_CARDS_TASK_FIRST_LOAD, ContainerClass, KeyCode, LOAD_MORE_COUNT} from "../components/config";
 import {renderElement} from "../components/utils";
 import {state} from "../main";
 import Menu from "../components/menu";
@@ -63,7 +63,7 @@ export class Index {
 
       const onEscDownTaskEdit = (evt) => {
         const key = evt.keyCode;
-        if (key === KEY_CODE.ESC) {
+        if (key === KeyCode.ESC) {
           closingCardEditingHandler();
         }
       };
