@@ -1,9 +1,8 @@
-/**
- * Функция, возвращающая разметку поиска
- *
- * @return {string}
- */
-export const getMarkupSearch = () => `<section class="main__search search container">
+import AbstractComponent from "./abstract-component";
+
+export default class Search extends AbstractComponent {
+  getTemplate() {
+    return `<section class="main__search search container">
         <input
           type="text"
           id="search__input"
@@ -12,3 +11,5 @@ export const getMarkupSearch = () => `<section class="main__search search contai
         />
         <label class="visually-hidden" for="search__input">Search</label>
       </section>`;
+  }
+}

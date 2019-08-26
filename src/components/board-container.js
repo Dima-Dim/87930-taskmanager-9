@@ -1,7 +1,7 @@
-/**
- * Функция, возвращающая разметку контейнера для контента
- *
- * @return {string}
- */
-export const getMarkupBoardContainer = () => `<section class="board container">
-</section>`;
+import AbstractComponent from "./abstract-component";
+
+export default class BoardContainer extends AbstractComponent {
+  getTemplate() {
+    return `<section class="board container"></section>`;
+  }
+}

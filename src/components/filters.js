@@ -1,3 +1,5 @@
+import AbstractComponent from "./abstract-component";
+
 /**
  * Функция для калькуляции количества задач, соответствующих условию
  *
@@ -103,31 +105,26 @@ export const filterData = (tasks) => ([
   }
 ]);
 
-/**
- * Функция, возвращающая разметку фильтра
- *
- * @param {Object} it Информация о фильтре
- *
- * @return {string}
- */
-const getMarkupFilter = (it) => `<input
-  type="radio"
-  id="filter__${it[`title`]}"
-  class="filter__input visually-hidden"
-  name="filter"
-  checked
-  />
-  <label for="filter__${it[`title`]}" class="filter__label">
-    ${it[`title`]} <span class="filter__${it[`title`]}-count">${it[`amount`]}</span></label
-  >`
-;
+export default class Filter extends AbstractComponent {
+  constructor(tasks) {
+    super();
+    this._filtersData = filterData(tasks);
+  }
 
-/**
- * Функция, возвращающая разметку блока фильтров
- *
- * @param {Array} tasks Объект с информацией о задачах
- *
- * @return {string}
- */
-export const getMarkupFilters = (tasks) => `${filterData(tasks).map((it) => getMarkupFilter(it)).join(``)
-}`;
+  getMarkupFilter(it) {
+    return `<input
+              type="radio"
+              id="filter__${it[`title`]}"
+              class="filter__input visually-hidden"
+              name="filter"
+              checked
+              />
+            <label for="filter__${it[`title`]}" class="filter__label">
+              ${it[`title`]} <span class="filter__${it[`title`]}-count">${it[`amount`]}</span>
+            </label>`;
+  }
+
+  getTemplate() {
+    return `<section class="main__filter filter container">${this._filtersData.map((it) => this.getMarkupFilter(it)).join(``)}<sections>`;
+  }
+}

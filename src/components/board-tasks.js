@@ -1,7 +1,7 @@
-/**
- * Функция, возвращающая разметку контейнера для списка задач
- *
- * @return {string}
- */
-export const getMarkupBoardTasks = () => `<div class="board__tasks">
-</div>`;
+import AbstractComponent from "./abstract-component";
+
+export default class BoardTasks extends AbstractComponent {
+  getTemplate() {
+    return `<div class="board__tasks"></div>`;
+  }
+}
