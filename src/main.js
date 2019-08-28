@@ -39,11 +39,7 @@ export const state = {
  *
  * @return {Array} allTasks массив задач
  */
-const getTasks = (count) => {
-  const allTasks = new Array(count).fill(``).map(getTaskData);
-  // state.changeAllTasks = allTasks.length;
-  return allTasks;
-};
+const getTasks = (count) => new Array(count).fill(``).map(getTaskData);
 
 const tasks = getTasks(ALL_TASK_COUNT);
 
