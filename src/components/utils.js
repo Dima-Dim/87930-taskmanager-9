@@ -49,3 +49,18 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
  * @return {string}
  */
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
+
+export const sortingTasks = {
+  up: (a, b) => {
+    return a.dueDate - b.dueDate;
+  },
+  down: (a, b) => {
+    return b.dueDate - a.dueDate;
+  }
+};
+
+export const filteringTask = {
+  all(tasks) {
+    return tasks.filter((it) => !it.isArchive);
+  }
+};
