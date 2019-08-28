@@ -41,7 +41,6 @@ export class Index {
         const task = new Task(it);
         const taskEdit = new TaskEdit(it);
         const cardEditBtn = task.getElement().querySelector(`.${ContainerClass.CARD_EDIT_BTN}`);
-        const cardEditTextAreaBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_EDIT_TEXTAREA}`);
         const cardSaveBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`);
         const cardDeleteBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_DELETE_BTN}`);
 
@@ -55,7 +54,6 @@ export class Index {
 
         const openingCardEditingHandler = () => {
           document.querySelector(container).replaceChild(taskEdit.getElement(), task.getElement());
-          cardEditTextAreaBtn.addEventListener(`focus`, onFocusTextArea);
           cardSaveBtn.addEventListener(`click`, onClickSaveBtn);
           cardDeleteBtn.addEventListener(`click`, onClickDeleteBtn);
           document.addEventListener(`keydown`, onEscDownTaskEdit);
@@ -64,21 +62,11 @@ export class Index {
 
         const onEscDownTaskEdit = (evt) => {
           const key = evt.keyCode;
-          if (key === KeyCode.ESC) {
-            closingCardEditingHandler();
+          if (key !== KeyCode.ESC || taskEdit.getElement().contains(evt.target)) {
+            return;
           }
-        };
 
-        const onFocusTextArea = () => {
-          cardEditTextAreaBtn.removeEventListener(`focus`, onFocusTextArea);
-          document.removeEventListener(`keydown`, onEscDownTaskEdit);
-          cardEditTextAreaBtn.addEventListener(`blur`, onBlurTextArea);
-        };
-
-        const onBlurTextArea = () => {
-          cardEditTextAreaBtn.removeEventListener(`blur`, onBlurTextArea);
-          document.addEventListener(`keydown`, onEscDownTaskEdit);
-          cardEditTextAreaBtn.addEventListener(`focus`, onFocusTextArea);
+          closingCardEditingHandler();
         };
 
         const onClickDifferentEditTask = (evt) => {
