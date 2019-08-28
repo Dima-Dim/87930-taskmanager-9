@@ -40,7 +40,9 @@ export class Index {
       items.forEach((it) => {
         const task = new Task(it);
         const taskEdit = new TaskEdit(it);
+        const inputs = [...taskEdit.getElement().querySelectorAll(`input`), ...taskEdit.getElement().querySelectorAll(`textarea`)];
         const cardEditBtn = task.getElement().querySelector(`.${ContainerClass.CARD_EDIT_BTN}`);
+        const cardEditTextAreaBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_EDIT_TEXTAREA}`);
         const cardSaveBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`);
         const cardDeleteBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_DELETE_BTN}`);
 
@@ -54,6 +56,9 @@ export class Index {
 
         const openingCardEditingHandler = () => {
           document.querySelector(container).replaceChild(taskEdit.getElement(), task.getElement());
+          for (const input of inputs) {
+            input.addEventListener(`focus`, onFocusInput);
+          }
           cardSaveBtn.addEventListener(`click`, onClickSaveBtn);
           cardDeleteBtn.addEventListener(`click`, onClickDeleteBtn);
           document.addEventListener(`keydown`, onEscDownTaskEdit);
@@ -62,11 +67,23 @@ export class Index {
 
         const onEscDownTaskEdit = (evt) => {
           const key = evt.keyCode;
-          if (key !== KeyCode.ESC || taskEdit.getElement().contains(evt.target)) {
-            return;
+          if (key === KeyCode.ESC) {
+            closingCardEditingHandler();
           }
+        };
 
-          closingCardEditingHandler();
+        const onFocusInput = () => {
+          cardEditTextAreaBtn.removeEventListener(`focus`, onFocusInput);
+          document.removeEventListener(`keydown`, onEscDownTaskEdit);
+          for (const input of inputs) {
+            input.addEventListener(`blur`, onBlurInput);
+          }
+        };
+
+        const onBlurInput = () => {
+          cardEditTextAreaBtn.removeEventListener(`blur`, onBlurInput);
+          document.addEventListener(`keydown`, onEscDownTaskEdit);
+          cardEditTextAreaBtn.addEventListener(`focus`, onFocusInput);
         };
 
         const onClickDifferentEditTask = (evt) => {
