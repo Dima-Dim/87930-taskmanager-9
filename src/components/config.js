@@ -43,6 +43,21 @@ export const tags = new Set([
   `intensive`,
 ]);
 
+export const sortTypes = [
+  {
+    type: `default`,
+    name: `SORT BY DEFAULT`,
+  },
+  {
+    type: `up`,
+    name: `SORT BY DATE up`,
+  },
+  {
+    type: `down`,
+    name: `SORT BY DATE down`,
+  }
+];
+
 export const ALL_TASK_COUNT = 30;
 export const AMOUNT_CARDS_TASK_FIRST_LOAD = 8;
 export const LOAD_MORE_COUNT = 8;

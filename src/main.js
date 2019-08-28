@@ -18,6 +18,11 @@ export const state = {
     this.renderCardTaskCounter += amount;
   },
 
+  set reset(amount) {
+    this.allTasks = amount;
+    this.renderCardTaskCounter = 0;
+  },
+
   get amountRenderCardTask() {
     return this.renderCardTaskCounter;
   },
@@ -36,7 +41,7 @@ export const state = {
  */
 const getTasks = (count) => {
   const allTasks = new Array(count).fill(``).map(getTaskData);
-  state.changeAllTasks = allTasks.length;
+  // state.changeAllTasks = allTasks.length;
   return allTasks;
 };
 

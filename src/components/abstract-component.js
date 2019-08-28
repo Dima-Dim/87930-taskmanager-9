@@ -22,8 +22,10 @@ export default class AbstractComponent {
   }
 
   removeElement() {
-    AbstractComponent.unRenderElement(this._element);
-    this._element = null;
+    if (this._element) {
+      AbstractComponent.unRenderElement(this._element);
+      this._element = null;
+    }
   }
 
   /**

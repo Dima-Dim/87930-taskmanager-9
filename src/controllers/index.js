@@ -1,4 +1,4 @@
-import {AMOUNT_CARDS_TASK_FIRST_LOAD, ContainerClass, KeyCode, LOAD_MORE_COUNT} from "../components/config";
+import {AMOUNT_CARDS_TASK_FIRST_LOAD, ContainerClass, sortTypes, LOAD_MORE_COUNT, KeyCode} from "../components/config";
 import {state} from "../main";
 import AbstractComponent from "../components/abstract-component";
 import Menu from "../components/menu";
@@ -6,15 +6,18 @@ import Search from "../components/search";
 import Filter from "../components/filters";
 import BoardContainer from "../components/board-container";
 import BoardFilter from "../components/board-filter";
+import BoardFilterItem from "../components/board-filter-item";
 import BoardTasks from "../components/board-tasks";
 import Task from "../components/card-task";
 import MoreBtn from "../components/load-more";
 import TaskEdit from "../components/card-task-edit";
 import NoTasks from "../components/no-tasks";
+import {filteringTask, sortingTasks} from "../components/utils";
 
 export class Index {
   constructor(tasks) {
-    this._tasks = tasks;
+    this._tasksOrigin = tasks;
+    this._tasks = this._tasksOrigin;
     this._memu = new Menu();
     this._search = new Search();
     this._filter = new Filter(this._tasks);
@@ -23,20 +26,41 @@ export class Index {
     this._boardTasks = new BoardTasks();
     this._noTasks = new NoTasks();
     this._moreBtn = new MoreBtn();
+    this._state = {
+      amountCards: AMOUNT_CARDS_TASK_FIRST_LOAD,
+      filter: `all`,
+      sort: `default`,
+      loadMore: false
+    };
   }
 
   init() {
     AbstractComponent.renderElement(`.${ContainerClass.CONTROL}`, this._memu.getElement());
     AbstractComponent.renderElement(`.${ContainerClass.MAIN}`, this._search.getElement());
     AbstractComponent.renderElement(`.${ContainerClass.MAIN}`, this._filter.getElement());
+    this._changeTasksOrder(() => filteringTask[this._state.filter](this._tasksOrigin));
+    this._renderBoard();
+  }
+
+  _changeTasksOrder(fn) {
+    this._tasks = fn();
+    state.reset = this._tasks.length;
+    this._moreBtn.removeElement();
+    this._state.loadMore = false;
+  }
+
+  _renderBoard(tasks = this._tasks) {
+    this._boardTasks.removeElement();
+    this._boardContainer.removeElement();
     AbstractComponent.renderElement(`.${ContainerClass.MAIN}`, this._boardContainer.getElement());
-    AbstractComponent.renderElement(`.${ContainerClass.BOARD}`, this._boardFilter.getElement());
     AbstractComponent.renderElement(`.${ContainerClass.BOARD}`, this._boardTasks.getElement());
-    this._renderTask(`.${ContainerClass.BOARD_TASKS}`, this._tasks.filter((it) => !it.isArchive).slice(0, AMOUNT_CARDS_TASK_FIRST_LOAD));
+    this._renderTask(`.${ContainerClass.BOARD_TASKS}`, tasks ? tasks.slice(0, this._state.amountCards) : null);
   }
 
   _renderTask(container, items) {
-    if (items.length) {
+    if (items && items.length) {
+      this._renderFilter();
+
       items.forEach((it) => {
         const task = new Task(it);
         const taskEdit = new TaskEdit(it);
@@ -111,12 +135,42 @@ export class Index {
         cardEditBtn.addEventListener(`click`, onClickTask);
 
         AbstractComponent.renderElement(container, task.getElement());
-        state.changeRenderCardTask = AMOUNT_CARDS_TASK_FIRST_LOAD;
-        this._renderLoadMore();
       });
+
+      state.changeRenderCardTask = items.length;
+      if (!this._state.loadMore) {
+        this._renderLoadMore();
+        this._state.loadMore = true;
+      }
+
     } else {
       AbstractComponent.renderElement(`.${ContainerClass.BOARD_TASKS}`, this._noTasks.getElement());
     }
+  }
+
+  _renderFilter() {
+    this._boardFilter.removeElement();
+    AbstractComponent.renderElement(`.${ContainerClass.BOARD}`, this._boardFilter.getElement(), `prepend`);
+
+    const onFilterItemClick = (evt) => {
+      this._state.sort = evt.target.closest(`a`).dataset.type;
+      this._boardContainer.removeElement();
+      if (this._state.sort === `default`) {
+        this._changeTasksOrder(() => filteringTask[this._state.filter](this._tasksOrigin));
+        this._renderBoard(this._tasks);
+      } else {
+        this._changeTasksOrder(() => [...this._tasks].sort(sortingTasks[this._state.sort]).filter((it) => !it.isArchive));
+        this._renderBoard(this._tasks);
+      }
+    };
+
+    sortTypes.forEach((it) => {
+      const filterItem = new BoardFilterItem(it);
+
+      filterItem.getElement().addEventListener(`click`, onFilterItemClick);
+
+      AbstractComponent.renderElement(this._boardFilter.getElement(), filterItem.getElement());
+    });
   }
 
   _renderLoadMore() {
@@ -137,8 +191,6 @@ export class Index {
         amountCardsTasks = state.amountAllTasks - state.amountRenderCardTask;
         endRenderCardNumber = startRenderCardNumber + amountCardsTasks;
       }
-
-      state.changeRenderCardTask = amountCardsTasks;
 
       this._renderTask(`.${ContainerClass.BOARD_TASKS}`, this._tasks.slice(startRenderCardNumber, endRenderCardNumber));
 
