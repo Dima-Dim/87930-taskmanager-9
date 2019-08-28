@@ -40,7 +40,7 @@ export class Index {
       items.forEach((it) => {
         const task = new Task(it);
         const taskEdit = new TaskEdit(it);
-        const inputs = [...taskEdit.getElement().querySelectorAll(`input`), ...taskEdit.getElement().querySelectorAll(`textarea`)];
+        const inputs = taskEdit.getElement().querySelectorAll(`input, textarea`);
         const cardEditBtn = task.getElement().querySelector(`.${ContainerClass.CARD_EDIT_BTN}`);
         const cardEditTextAreaBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_EDIT_TEXTAREA}`);
         const cardSaveBtn = taskEdit.getElement().querySelector(`.${ContainerClass.CARD_SAVE_BTN}`);
