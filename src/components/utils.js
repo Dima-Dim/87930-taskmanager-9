@@ -31,7 +31,17 @@ const MONTH = new Map([
  *
  * @return {number}
  */
-export const getDayFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).getDate();
+export const getDateFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).getDate();
+
+/**
+ * Функция, преобразующая timestamp в день недели
+ *
+ * @param {number} timestamp
+ *
+ * @return {number}
+ */
+export const getDayFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).getDay();
+
 
 /**
  * Функция, преобразующая timestamp в название месяца
