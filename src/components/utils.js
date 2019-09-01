@@ -31,7 +31,17 @@ const MONTH = new Map([
  *
  * @return {number}
  */
-export const getDayFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).getDate();
+export const getDateFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).getDate();
+
+/**
+ * Функция, преобразующая timestamp в день недели
+ *
+ * @param {number} timestamp
+ *
+ * @return {number}
+ */
+export const getDayFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).getDay();
+
 
 /**
  * Функция, преобразующая timestamp в название месяца
@@ -51,16 +61,10 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
 
 export const sortingTasks = {
-  up: (a, b) => {
-    return a.dueDate - b.dueDate;
-  },
-  down: (a, b) => {
-    return b.dueDate - a.dueDate;
-  }
+  up: (a, b) => a.dueDate - b.dueDate,
+  down: (a, b) => b.dueDate - a.dueDate,
 };
 
 export const filteringTask = {
-  all(tasks) {
-    return tasks.filter((it) => !it.isArchive);
-  }
+  all: (tasks) => tasks.filter((it) => !it.isArchive),
 };

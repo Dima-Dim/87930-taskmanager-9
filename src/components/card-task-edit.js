@@ -1,4 +1,4 @@
-import {getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
+import {getDateFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
 import {getMarkupCardColors} from "./card-color";
 import {getMarkupRepeatDays} from "./repeat-days";
 import {getMarkupHashtagsEdit} from "./hashtag-edit";
@@ -33,7 +33,7 @@ export default class TaskEdit extends AbstractComponent {
                   </div>
       
                   <div class="card__color-bar">
-                    <svg width="100%" height="10">
+                    <svg class="card__color-bar-wave" width="100%" height="10">
                       <use xlink:href="#wave"></use>
                     </svg>
                   </div>
@@ -52,17 +52,17 @@ export default class TaskEdit extends AbstractComponent {
                     <div class="card__details">
                       <div class="card__dates">
                         <button class="card__date-deadline-toggle" type="button">
-                          date: <span class="card__date-status">${getDayFromTimeStamp(this._dueDate) || getMonthFromTimeStamp(this._dueDate) ? `yes` : `no`}</span>
+                          date: <span class="card__date-status">${getDateFromTimeStamp(this._dueDate) || getMonthFromTimeStamp(this._dueDate) ? `yes` : `no`}</span>
                         </button>
       
-                        <fieldset class="card__date-deadline" ${getDayFromTimeStamp(this._dueDate) || getMonthFromTimeStamp(this._dueDate) ? `` : `disabled`}>
+                        <fieldset class="card__date-deadline" ${getDateFromTimeStamp(this._dueDate) || getMonthFromTimeStamp(this._dueDate) ? `` : `disabled`}>
                           <label class="card__input-deadline-wrap">
                             <input
                               class="card__date"
                               type="text"
                               placeholder=""
                               name="date"
-                              value="${getDayFromTimeStamp(this._dueDate)} ${getMonthFromTimeStamp(this._dueDate)} ${getTimeFromTimeStamp(this._dueDate)}"
+                              value="${getDateFromTimeStamp(this._dueDate)} ${getMonthFromTimeStamp(this._dueDate)} ${getTimeFromTimeStamp(this._dueDate)}"
                             />
                           </label>
                         </fieldset>

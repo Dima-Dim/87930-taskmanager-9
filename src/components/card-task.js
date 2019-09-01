@@ -1,5 +1,5 @@
 import {getMarkupHashtags} from "./hashtag";
-import {getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
+import {getDateFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "./utils";
 import AbstractComponent from "./abstract-component";
 
 export default class Task extends AbstractComponent {
@@ -48,7 +48,7 @@ export default class Task extends AbstractComponent {
                       <div class="card__dates">
                         <div class="card__date-deadline">
                           <p class="card__input-deadline-wrap">
-                            <span class="card__date">${getDayFromTimeStamp(this._dueDate)} ${getMonthFromTimeStamp(this._dueDate)}</span>
+                            <span class="card__date">${getDateFromTimeStamp(this._dueDate)} ${getMonthFromTimeStamp(this._dueDate)}</span>
                             <span class="card__time">${getTimeFromTimeStamp(this._dueDate)}</span>
                           </p>
                         </div>
