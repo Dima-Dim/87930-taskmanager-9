@@ -1,10 +1,12 @@
 import Task from "../components/card-task";
 import TaskEdit from "../components/card-task-edit";
-import {ClassesElements, daysInDate, KeyCode} from "../components/config";
+import {ClassesElements, daysInDate, FLATPICKR_CONFIG, KeyCode} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import {getDateFromTimeStamp, getDayFromTimeStamp, getMonthFromTimeStamp, getTimeFromTimeStamp} from "../components/utils";
 import {getMarkupRepeatDays} from "../components/repeat-days";
 import {getMarkupHashtagsEdit} from "../components/hashtag-edit";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 export default class TaskController {
   constructor(container, data, _onDataChange) {
@@ -31,6 +33,7 @@ export default class TaskController {
     const cardEditDeadLineToggle = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_DEAD_LINE_TOGGLE}`);
     const cardEditDeadLineStatus = cardEditDeadLineToggle.querySelector(`.${ClassesElements.CARD_EDIT_DEAD_LINE_STATUS}`);
     const cardEditDeadLineFileset = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_DEAD_LINE_FIELDSET}`);
+    const cardEditDateInput = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_DATE_INPUT}`);
     const cardEditRepeatToggle = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_REPEAT_TOGGLE}`);
     const cardEditRepeatStatus = cardEditRepeatToggle.querySelector(`.${ClassesElements.CARD_EDIT_REPEAT_STATUS}`);
     const cardEditRepeatFileset = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_REPEAT_FIELDSET}`);
@@ -38,6 +41,8 @@ export default class TaskController {
     const cardEditHashtagList = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_HASHTAG_LIST}`);
     const cardEditColorsWrap = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_COLORS_WRAP}`);
     const cardDeleteBtn = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_DELETE_BTN}`);
+
+    flatpickr(cardEditDateInput, FLATPICKR_CONFIG);
 
     const closingCardEditingHandler = () => {
       document.querySelector(this._container).replaceChild(this._task.getElement(), this._taskEdit.getElement());
@@ -139,12 +144,13 @@ export default class TaskController {
       }
     };
 
-    const onSubmitTaskEdit = () => {
+    const onSubmitTaskEdit = (evt) => {
+      evt.preventDefault();
       closingCardEditingHandler();
       const form = new FormData(this._taskEdit.getElement().querySelector(`form`));
       const entry = {
         description: form.get(`text`),
-        dueDate: Date.parse(form.get(`date`)),
+        dueDate: form.get(`date`) * 1000,
         repeatingDays: new Set([...form.getAll(`repeat`)]),
         tags: form.getAll(`hashtag`),
         color: form.get(`color`),

@@ -62,7 +62,8 @@ export default class TaskEdit extends AbstractComponent {
                               type="text"
                               placeholder=""
                               name="date"
-                              value="${getDateFromTimeStamp(this._dueDate)} ${getMonthFromTimeStamp(this._dueDate)} ${getTimeFromTimeStamp(this._dueDate)}"
+                              data-time="${getDateFromTimeStamp(this._dueDate)} ${getMonthFromTimeStamp(this._dueDate)} ${getTimeFromTimeStamp(this._dueDate)}"
+                              value="${this._dueDate / 1000}"
                             />
                           </label>
                         </fieldset>

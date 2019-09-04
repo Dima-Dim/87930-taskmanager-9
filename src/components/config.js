@@ -11,6 +11,7 @@ export const ClassesElements = {
   CARD_EDIT_FAVORITES: `card__btn--favorites`,
   CARD_EDIT_FAVORITES_DISABLED: `card__btn--disabled`,
   CARD_EDIT_TEXTAREA: `card__text`,
+  CARD_EDIT_DATE_INPUT: `card__date`,
   CARD_EDIT_DEAD_LINE_TOGGLE: `card__date-deadline-toggle`,
   CARD_EDIT_DEAD_LINE_STATUS: `card__date-status`,
   CARD_EDIT_DEAD_LINE_FIELDSET: `card__date-deadline`,
@@ -89,4 +90,12 @@ export const LOAD_MORE_COUNT = 8;
 export const KeyCode = {
   ESC: 27,
   ENTER: 13,
+};
+
+export const FLATPICKR_CONFIG = {
+  locale: `en`,
+  enableTime: true,
+  altInput: true,
+  altFormat: `d F`,
+  dateFormat: `U`,
 };
