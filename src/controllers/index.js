@@ -28,7 +28,7 @@ export class Index {
     this._boardContainer = new BoardContainer();
     this._boardFilter = new BoardFilter();
     this._boardTasks = new BoardTasks();
-    this._statistic = new Statistic(`.${ClassesElements.MAIN}`);
+    this._statistic = new Statistic(`.${ClassesElements.MAIN}`, this._tasksOrigin);
     this._searchResult = new SearchResult(`.${ClassesElements.MAIN}`, this._onChangeView.bind(this));
     this._noResults = new SearchNoResults();
     this._noTasks = new NoTasks();

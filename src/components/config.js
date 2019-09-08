@@ -1,3 +1,5 @@
+import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
+
 export const ClassesElements = {
   MAIN: `main`,
   CONTROL: `control`,
@@ -30,6 +32,9 @@ export const ClassesElements = {
   CARD_EDIT_COLORS_WRAP: `card__colors-wrap`,
   CARD_SAVE_BTN: `card__save`,
   CARD_DELETE_BTN: `card__delete`,
+  STATISTICS_PERIOD_INPUT: `statistic__period-input`,
+  STATISTICS_TAGS: `statistic__tags`,
+  STATISTICS_COLORS: `statistic__colors`,
 };
 
 export const locales = `en-US`;
@@ -68,6 +73,16 @@ export const daysInDate = new Set([
   `sa`,
 ]);
 
+export const orderWeekDays = [
+  `mo`,
+  `tu`,
+  `we`,
+  `th`,
+  `fr`,
+  `sa`,
+  `su`,
+];
+
 export const tags = new Set([
   `homework`,
   `theory`,
@@ -98,10 +113,20 @@ export const KeyCode = {
   ENTER: 13,
 };
 
-export const FLATPICKR_CONFIG = {
-  locale: `en`,
-  enableTime: true,
-  altInput: true,
-  altFormat: `d F`,
-  dateFormat: `U`,
-};
+const FLATPICKR_TEMP_CONFIG = {};
+
+export const FLATPICKR_CONF = new Map([
+  [`locale`, `en`],
+  [`enableTime`, true],
+  [`time_24hr`, true],
+  [`altInput`, true],
+  [`altFormat`, `d/m/y H:i`],
+  [`dateFormat`, `U`],
+  [`plugins`, [new ConfirmDatePlugin({})]],
+]);
+
+FLATPICKR_CONF.forEach((value, key) => {
+  FLATPICKR_TEMP_CONFIG[key] = value;
+});
+
+export const FLATPICKR_CONFIG = FLATPICKR_TEMP_CONFIG;
