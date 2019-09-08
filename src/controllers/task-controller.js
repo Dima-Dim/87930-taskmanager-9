@@ -117,7 +117,8 @@ export default class TaskController {
 
     const onClickDeleteBtn = () => {
       closingCardEditingHandler();
-      this._task.removeElement();
+      this._onDataChange(this._data, null);
+      // this._task.removeElement();
     };
 
     const onClickArchive = () => {
@@ -154,6 +155,7 @@ export default class TaskController {
         repeatingDays: new Set([...form.getAll(`repeat`)]),
         tags: form.getAll(`hashtag`),
         color: form.get(`color`),
+        isDraft: false,
       };
 
       const newData = Object.assign({}, this._data, entry);
@@ -227,5 +229,8 @@ export default class TaskController {
     cardFavorites.addEventListener(`click`, onClickFavorite);
 
     AbstractComponent.renderElement(this._container, this._task.getElement());
+    if (this._data.isDraft) {
+      openingCardEditingHandler();
+    }
   }
 }

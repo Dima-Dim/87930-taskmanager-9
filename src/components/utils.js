@@ -60,6 +60,29 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
  */
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
 
+/**
+ * Функция, преобразующая timestamp в дату для поиска в формате D12.03.2019
+ *
+ * @param {number}timestamp
+ *
+ * @return {string}
+ */
+export const getDateForSearchFromTimeStamp = (timestamp) => {
+  let day = getDateFromTimeStamp(timestamp);
+  let month = dateObgFromTimestamp(timestamp).getMonth() + 1;
+  const year = dateObgFromTimestamp(timestamp).getFullYear();
+
+  if (day < 10) {
+    day = `0${day}`;
+  }
+
+  if (month < 10) {
+    month = `0${month}`;
+  }
+
+  return `${day}${month}${year}`;
+};
+
 export const sortingTasks = {
   up: (a, b) => a.dueDate - b.dueDate,
   down: (a, b) => b.dueDate - a.dueDate,
