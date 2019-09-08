@@ -36,4 +36,16 @@ export const getTaskData = () => ({
   color: Array.from(cardColors)[Math.floor(Math.random() * 5)],
   isFavorite: Boolean(Math.round(Math.random())),
   isArchive: Boolean(Math.round(Math.random())),
+  isDraft: false,
+});
+
+export const getNewTaskData = () => ({
+  description: ``,
+  dueDate: Date.now(),
+  repeatingDays: new Set(),
+  tags: new Set(),
+  color: Array.from(cardColors)[Math.floor(Math.random() * 5)],
+  isFavorite: false,
+  isArchive: false,
+  isDraft: true,
 });

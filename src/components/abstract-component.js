@@ -21,6 +21,14 @@ export default class AbstractComponent {
     return this._element;
   }
 
+  hide() {
+    this.getElement().classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this.getElement().classList.remove(`visually-hidden`);
+  }
+
   removeElement() {
     if (this._element) {
       AbstractComponent.unRenderElement(this._element);
