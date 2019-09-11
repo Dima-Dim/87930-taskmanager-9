@@ -1,4 +1,4 @@
-import {locales, timeFormat} from "./config";
+import {daysInDate, locales, orderWeekDays, timeFormat} from "./config";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -90,4 +90,28 @@ export const sortingTasks = {
 
 export const filteringTask = {
   all: (tasks) => tasks.filter((it) => !it.isArchive),
+};
+
+const currentDate = new Date();
+
+export const getFirstWeekDate = () => {
+  const firstWeekDay = new Date(currentDate.setDate(currentDate.getDate() - orderWeekDays.indexOf(Array.from(daysInDate)[currentDate.getDay()]) - 7));
+
+  firstWeekDay.setHours(0);
+  firstWeekDay.setMinutes(0);
+  firstWeekDay.setSeconds(0);
+  firstWeekDay.setMilliseconds(0);
+
+  return firstWeekDay;
+};
+
+export const getLastWeekDate = () => {
+  const lastWeekDay = new Date(currentDate.setDate(currentDate.getDate() - orderWeekDays.indexOf(Array.from(daysInDate)[currentDate.getDay()]) + 6));
+
+  lastWeekDay.setHours(23);
+  lastWeekDay.setMinutes(59);
+  lastWeekDay.setSeconds(59);
+  lastWeekDay.setMilliseconds(0);
+
+  return lastWeekDay;
 };
