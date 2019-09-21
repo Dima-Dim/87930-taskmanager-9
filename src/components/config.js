@@ -1,5 +1,7 @@
 import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 
+export const FILTER_ID_PREFIX = `filter__`;
+
 export const ClassesElements = {
   MAIN: `main`,
   CONTROL: `control`,

@@ -2,7 +2,7 @@ import {ALL_TASK_COUNT} from "./components/config";
 import {getTaskData} from "./components/data";
 import {Index} from "./controllers";
 
-export const state = {
+export const globalState = {
   allTasks: 0,
   renderCardTaskCounter: 0,
 
@@ -41,7 +41,7 @@ export const state = {
  */
 const getTasks = (count) => new Array(count).fill(``).map(getTaskData);
 
-const tasks = getTasks(ALL_TASK_COUNT);
+globalState.tasks = getTasks(ALL_TASK_COUNT);
 
-const start = new Index(tasks);
+const start = new Index();
 start.init();

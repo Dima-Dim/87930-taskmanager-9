@@ -7,8 +7,6 @@ export default class MenuController {
     this._container = container;
     this._menu = new Menu();
     this._onChange = onChangeView;
-
-    this.init();
   }
 
   init() {

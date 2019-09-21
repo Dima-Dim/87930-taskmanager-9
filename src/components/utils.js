@@ -1,4 +1,5 @@
 import {daysInDate, locales, orderWeekDays, timeFormat} from "./config";
+import {globalState} from "../main";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -114,4 +115,40 @@ export const getLastWeekDate = () => {
   lastWeekDay.setMilliseconds(0);
 
   return lastWeekDay;
+};
+
+export const taskFiltering = (filterName) => {
+  let filteredTasks = null;
+
+  switch (filterName) {
+    case `all`:
+      filteredTasks = globalState.tasks;
+      break;
+
+    case `favorites`:
+      filteredTasks = globalState.tasks.filter((it) => it.isFavorite);
+      break;
+
+    case `overdue`:
+      filteredTasks = globalState.tasks.filter((it) => it.dueDate < Date.now());
+      break;
+
+    case `today`:
+      filteredTasks = globalState.tasks.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === getDateForSearchFromTimeStamp(Date.now()));
+      break;
+
+    case `repeating`:
+      filteredTasks = globalState.tasks.filter((it) => it.repeatingDays.size > 0);
+      break;
+
+    case `tags`:
+      filteredTasks = globalState.tasks.filter((it) => it.tags.size > 0);
+      break;
+
+    case `archive`:
+      filteredTasks = globalState.tasks.filter((it) => it.isArchive);
+      break;
+  }
+
+  return filteredTasks;
 };

@@ -19,21 +19,21 @@ export default class Statistic extends AbstractComponent {
 
     flatpickr(statisticsPeriodInput, Object.assign({}, FLATPICKR_CONFIG, {mode: `range`}, {defaultDate: [getFirstWeekDate(), getLastWeekDate()]}));
 
-    const statisticsPeriodflatpickrInput = this.getElement().querySelector(`.flatpickr-input`);
+    const statisticsPeriodFlatpickrInput = this.getElement().querySelector(`.flatpickr-input`);
 
-    this._filterTaskByDate(statisticsPeriodflatpickrInput.value.slice(0, 10) * 1000, statisticsPeriodflatpickrInput.value.slice(-10) * 1000);
+    this._filterTaskByDate(statisticsPeriodFlatpickrInput.value.slice(0, 10) * 1000, statisticsPeriodFlatpickrInput.value.slice(-10) * 1000);
 
     this._makeTagsChart();
     this._makeColorsChart();
 
-    const onChangePeriodflatpickrInput = (evt) => {
+    const onChangePeriodFlatpickrInput = (evt) => {
       const {value} = evt.target;
       this._filterTaskByDate(value.slice(0, 10) * 1000, value.slice(-10) * 1000);
       this._makeTagsChart();
       this._makeColorsChart();
     };
 
-    statisticsPeriodflatpickrInput.addEventListener(`change`, onChangePeriodflatpickrInput);
+    statisticsPeriodFlatpickrInput.addEventListener(`change`, onChangePeriodFlatpickrInput);
   }
 
   _filterTaskByDate(startDate, endDate) {

@@ -117,7 +117,6 @@ export default class Filter extends AbstractComponent {
               id="filter__${it[`title`]}"
               class="filter__input visually-hidden"
               name="filter"
-              checked
               />
             <label for="filter__${it[`title`]}" class="filter__label">
               ${it[`title`]} <span class="filter__${it[`title`]}-count">${it[`amount`]}</span>
