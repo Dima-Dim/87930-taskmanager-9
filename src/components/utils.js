@@ -152,3 +152,15 @@ export const taskFiltering = (filterName) => {
 
   return filteredTasks;
 };
+
+export const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
+export const fromJSON = (response) => {
+  return response.json();
+};

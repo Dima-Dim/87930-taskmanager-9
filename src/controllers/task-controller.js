@@ -155,7 +155,6 @@ export default class TaskController {
         repeatingDays: new Set([...form.getAll(`repeat`)]),
         tags: form.getAll(`hashtag`),
         color: form.get(`color`),
-        isDraft: false,
       };
 
       const newData = Object.assign({}, this._data, entry);

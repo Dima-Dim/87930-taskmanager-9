@@ -1,5 +1,21 @@
 import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 
+export const HTTPMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`,
+};
+
+export const HTTPHeaders = {
+  JSON: {'Content-Type': `application/json`},
+};
+
+export const ApiData = {
+  host: `https://htmlacademy-es-9.appspot.com/task-manager`,
+  authorization: `Basic eo0w590ik29889a2`,
+};
+
 export const FILTER_ID_PREFIX = `filter__`;
 
 export const ClassesElements = {

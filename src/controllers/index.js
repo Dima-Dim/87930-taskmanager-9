@@ -43,6 +43,8 @@ export class Index {
       ]),
       page: `control__task`,
     };
+
+    this.init();
   }
 
   init() {
@@ -53,8 +55,7 @@ export class Index {
     this._changeTasksOrder(() => filteringTask[this._state.filter](globalState.tasks));
   }
 
-  _onChangeView(activeMenuItem, add, {text = null, filter = `all`}) {
-
+  _onChangeView(activeMenuItem, add, searchData) {
     switch (activeMenuItem) {
       case `control__task`:
         this._state.menuItems.get(this._state.page).hide();
@@ -63,7 +64,17 @@ export class Index {
         this._searchController.searchInputClean();
         break;
 
+      case `control__statistic`:
+        this._state.menuItems.get(this._state.page).hide();
+        this._state.page = activeMenuItem;
+        this._state.menuItems.get(this._state.page).show();
+        this._searchController.searchInputClean();
+        break;
+
       case `search`:
+        const text = searchData.text;
+        const filter = searchData.filter;
+
         if (text) {
           this._state.menuItems.get(this._state.page).hide();
           this._state.page = activeMenuItem;
@@ -97,6 +108,8 @@ export class Index {
   }
 
   _changeTasksOrder(fnFilter) {
+    this._tasks = globalState.tasks;
+
     if (fnFilter) {
       this._tasks = fnFilter();
     }
@@ -143,20 +156,33 @@ export class Index {
 
   _onDataChange(currentData, newDate) {
     const newDateIndexInTasksOrigin = globalState.tasks.findIndex((it) => it === currentData);
-    const newDateIndexInTasks = this._tasks.findIndex((it) => it === currentData);
+    // const newDateIndexInTasks = this._tasks.findIndex((it) => it === currentData);
 
     if (!newDate) {
-      globalState.tasks.splice(newDateIndexInTasksOrigin, 1);
-      this._tasks.splice(newDateIndexInTasks, 1);
+      globalState.api.deleteTask(this._tasks[newDateIndexInTasksOrigin])
+        .then(() => globalState.api.getTasks())
+        .then((tasks) => globalState.addTasks(tasks))
+        .then(() => this._changeTasksOrder());
     } else if (!currentData) {
       globalState.tasks.unshift(newDate);
-      this._tasks.unshift(newDate);
+      this._changeTasksOrder();
     } else {
-      globalState.tasks[newDateIndexInTasksOrigin] = newDate;
-      this._tasks[newDateIndexInTasks] = newDate;
+      if (currentData.isDraft) {
+        globalState.api.createTask(newDate)
+          .then(() => globalState.api.getTasks())
+          .then((tasks) => globalState.addTasks(tasks))
+          .then(() => this._changeTasksOrder());
+      } else {
+        globalState.api.updateTask(newDate)
+          .then(() => globalState.api.getTasks())
+          .then((tasks) => globalState.addTasks(tasks))
+          .then(() => this._changeTasksOrder());
+      }
+      // globalState.tasks[newDateIndexInTasksOrigin] = newDate;
+      // this._tasks[newDateIndexInTasks] = newDate;
     }
 
-    this._changeTasksOrder();
+    // this._changeTasksOrder();
   }
 
   _renderFilter() {

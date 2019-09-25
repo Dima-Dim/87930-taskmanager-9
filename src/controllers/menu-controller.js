@@ -1,6 +1,5 @@
 import Menu from "../components/menu";
 import AbstractComponent from "../components/abstract-component";
-import {ClassesElements} from "../components/config";
 
 export default class MenuController {
   constructor(container, onChangeView) {
@@ -14,19 +13,15 @@ export default class MenuController {
 
     const onChangeMenu = () => {
       const activeMenuItem = this._menu.getElement().querySelector(`input:checked`).id;
-      this._onChange(activeMenuItem);
-    };
 
-    const onClickMenu = (evt) => {
-      const target = evt.target;
-
-      if (target.closest(`.${ClassesElements.ADD_NEW_TASK_TASK_LABEL}`)) {
+      if (activeMenuItem === `control__new-task`) {
         this._onChange(`control__task`, `add`);
-      } else if (target.localName === `input`) {
-        onChangeMenu(evt);
+      } else {
+        console.log(activeMenuItem);
+        this._onChange(activeMenuItem);
       }
     };
 
-    this._menu.getElement().addEventListener(`click`, onClickMenu);
+    this._menu.getElement().addEventListener(`change`, onChangeMenu);
   }
 }
