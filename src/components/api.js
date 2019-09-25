@@ -15,27 +15,25 @@ export default class Api {
   }
 
   createTask(task) {
-    console.log(JSON.stringify(TasksAdapter.toSource(task)));
     return this._load({
       path: `tasks`,
       method: HTTPMethod.POST,
       body: JSON.stringify(TasksAdapter.toSource(task)),
-      headers: new Headers({'Content-Type': `application/json`})
-      // headers: new Headers(HTTPHeaders.JSON),
+      headers: new Headers(HTTPHeaders.JSON),
     })
       .then(fromJSON)
-      .then(TasksAdapter.parseTasks);
+      .then(TasksAdapter.parseTask);
   }
 
-  updateTask({id, data}) {
+  updateTask(task) {
     return this._load({
-      path: `tasks/${id}`,
+      path: `tasks/${task.id}`,
       method: HTTPMethod.PUT,
-      body: JSON.stringify(data),
+      body: JSON.stringify(TasksAdapter.toSource(task)),
       headers: new Headers(HTTPHeaders.JSON)
     })
       .then(fromJSON)
-      .then(TasksAdapter.parseTasks);
+      .then(TasksAdapter.parseTask);
   }
 
   deleteTask({id}) {

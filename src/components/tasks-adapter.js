@@ -1,3 +1,5 @@
+import {repeatingDaysForApi, getDatetimeFromTimeStamp} from "./utils";
+
 export default class TasksAdapter {
   constructor(data) {
     this.id = data[`id`];
@@ -23,12 +25,12 @@ export default class TasksAdapter {
     return {
       'id': task.id,
       'description': task.description,
-      'due_date': task.dueDate,
+      'due_date': getDatetimeFromTimeStamp(task.dueDate),
       'tags': [...task.tags.values()],
-      'repeating_days': task.repeatingDays,
+      'repeating_days': repeatingDaysForApi(task.repeatingDays),
       'color': task.color,
       'is_favorite': task.isFavorite,
-      'is_archive': task.isArchive,
+      'is_archived': task.isArchive,
     };
   }
 }

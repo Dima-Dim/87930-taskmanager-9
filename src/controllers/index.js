@@ -166,21 +166,19 @@ export class Index {
     } else if (!currentData) {
       globalState.tasks.unshift(newDate);
       this._changeTasksOrder();
+    } else if (currentData.isDraft) {
+      globalState.api.createTask(newDate)
+        .then(() => globalState.api.getTasks())
+        .then((tasks) => globalState.addTasks(tasks))
+        .then(() => this._changeTasksOrder());
     } else {
-      if (currentData.isDraft) {
-        globalState.api.createTask(newDate)
-          .then(() => globalState.api.getTasks())
-          .then((tasks) => globalState.addTasks(tasks))
-          .then(() => this._changeTasksOrder());
-      } else {
-        globalState.api.updateTask(newDate)
-          .then(() => globalState.api.getTasks())
-          .then((tasks) => globalState.addTasks(tasks))
-          .then(() => this._changeTasksOrder());
-      }
-      // globalState.tasks[newDateIndexInTasksOrigin] = newDate;
-      // this._tasks[newDateIndexInTasks] = newDate;
+      globalState.api.updateTask(newDate)
+        .then(() => globalState.api.getTasks())
+        .then((tasks) => globalState.addTasks(tasks))
+        .then(() => this._changeTasksOrder());
     }
+    // globalState.tasks[newDateIndexInTasksOrigin] = newDate;
+    // this._tasks[newDateIndexInTasks] = newDate;
 
     // this._changeTasksOrder();
   }

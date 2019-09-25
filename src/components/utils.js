@@ -1,4 +1,4 @@
-import {daysInDate, locales, orderWeekDays, timeFormat} from "./config";
+import {daysInDate, locales, orderWeekDays, timeFormat, workDays} from "./config";
 import {globalState} from "../main";
 
 /**
@@ -60,6 +60,15 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
  * @return {string}
  */
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
+
+/**
+ * Функция, преобразующая timestamp в datetime для HTML
+ *
+ * @param {number}timestamp
+ *
+ * @return {string}
+ */
+export const getDatetimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toISOString();
 
 /**
  * Функция, преобразующая timestamp в дату для поиска в формате D12.03.2019
@@ -163,4 +172,13 @@ export const checkStatus = (response) => {
 
 export const fromJSON = (response) => {
   return response.json();
+};
+
+export const repeatingDaysForApi = (data) => {
+  const newObj = {};
+  workDays.forEach((it) => {
+    newObj[it] = data.has(it);
+  });
+
+  return newObj;
 };
