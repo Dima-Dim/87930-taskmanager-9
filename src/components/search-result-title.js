@@ -1,1 +1,1 @@
-export const getSearchResultTitle = (text = `work`, value = `17`) => `${text.toString()}<span class="result__count">${value}</span>`;
+export const getSearchResultTitle = (text, value) => `${text ? text.toString() : ``}<span class="result__count">${value}</span>`;

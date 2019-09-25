@@ -1,4 +1,5 @@
-import {daysInDate, locales, orderWeekDays, timeFormat} from "./config";
+import {daysInDate, locales, orderWeekDays, timeFormat, workDays} from "./config";
+import {globalState} from "../main";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -61,6 +62,15 @@ export const getMonthFromTimeStamp = (timestamp) => MONTH.get(Number(dateObgFrom
 export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
 
 /**
+ * Функция, преобразующая timestamp в datetime для HTML
+ *
+ * @param {number}timestamp
+ *
+ * @return {string}
+ */
+export const getDatetimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toISOString();
+
+/**
  * Функция, преобразующая timestamp в дату для поиска в формате D12.03.2019
  *
  * @param {number}timestamp
@@ -114,4 +124,61 @@ export const getLastWeekDate = () => {
   lastWeekDay.setMilliseconds(0);
 
   return lastWeekDay;
+};
+
+export const taskFiltering = (filterName) => {
+  let filteredTasks = null;
+
+  switch (filterName) {
+    case `all`:
+      filteredTasks = globalState.tasks;
+      break;
+
+    case `favorites`:
+      filteredTasks = globalState.tasks.filter((it) => it.isFavorite);
+      break;
+
+    case `overdue`:
+      filteredTasks = globalState.tasks.filter((it) => it.dueDate < Date.now());
+      break;
+
+    case `today`:
+      filteredTasks = globalState.tasks.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === getDateForSearchFromTimeStamp(Date.now()));
+      break;
+
+    case `repeating`:
+      filteredTasks = globalState.tasks.filter((it) => it.repeatingDays.size > 0);
+      break;
+
+    case `tags`:
+      filteredTasks = globalState.tasks.filter((it) => it.tags.size > 0);
+      break;
+
+    case `archive`:
+      filteredTasks = globalState.tasks.filter((it) => it.isArchive);
+      break;
+  }
+
+  return filteredTasks;
+};
+
+export const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
+export const fromJSON = (response) => {
+  return response.json();
+};
+
+export const repeatingDaysForApi = (data) => {
+  const newObj = {};
+  workDays.forEach((it) => {
+    newObj[it] = data.has(it);
+  });
+
+  return newObj;
 };

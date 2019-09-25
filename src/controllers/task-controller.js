@@ -149,13 +149,13 @@ export default class TaskController {
       evt.preventDefault();
       closingCardEditingHandler();
       const form = new FormData(this._taskEdit.getElement().querySelector(`form`));
+      console.log(form.get(`date`) * 1000);
       const entry = {
         description: form.get(`text`),
         dueDate: form.get(`date`) * 1000,
         repeatingDays: new Set([...form.getAll(`repeat`)]),
         tags: form.getAll(`hashtag`),
         color: form.get(`color`),
-        isDraft: false,
       };
 
       const newData = Object.assign({}, this._data, entry);

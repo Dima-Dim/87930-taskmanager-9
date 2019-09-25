@@ -7,8 +7,6 @@ export default class SearchResult extends AbstractComponent {
     super();
     this._container = container;
     this._onChangeView = onChangeView;
-
-    this.init();
   }
 
   init() {

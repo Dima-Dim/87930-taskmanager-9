@@ -1,15 +1,14 @@
 import {AMOUNT_CARDS_TASK_FIRST_LOAD, ClassesElements, sortTypes, LOAD_MORE_COUNT} from "../components/config";
-import {state} from "../main";
+import {globalState} from "../main";
 import AbstractComponent from "../components/abstract-component";
-import Filter from "../components/filters";
 import BoardContainer from "../components/board-container";
-import BoardFilter from "../components/board-filter";
+import SortContainer from "../components/sort-container";
 import BoardFilterItem from "../components/board-filter-item";
 import BoardTasks from "../components/board-tasks";
 import MoreBtn from "../components/load-more";
 import TaskController from "./task-controller";
 import NoTasks from "../components/no-tasks";
-import {filteringTask, sortingTasks, getDateForSearchFromTimeStamp} from "../components/utils";
+import {filteringTask, sortingTasks, getDateForSearchFromTimeStamp, taskFiltering} from "../components/utils";
 import MenuController from "./menu-controller";
 import Statistic from "../components/statistic";
 import {getNewTaskData} from "../components/data";
@@ -19,16 +18,14 @@ import {getSearchResultTitle} from "../components/search-result-title";
 import SearchNoResults from "../components/search-no-results";
 
 export class Index {
-  constructor(tasks) {
-    this._tasksOrigin = tasks;
-    this._tasks = this._tasksOrigin;
+  constructor() {
+    this._tasks = globalState.tasks;
     this._memuController = new MenuController(`.${ClassesElements.CONTROL}`, this._onChangeView.bind(this));
     this._searchController = new SearchController(`.${ClassesElements.MAIN}`, this._onChangeView.bind(this));
-    this._filter = new Filter(this._tasks);
     this._boardContainer = new BoardContainer();
-    this._boardFilter = new BoardFilter();
+    this._sortContainer = new SortContainer();
     this._boardTasks = new BoardTasks();
-    this._statistic = new Statistic(`.${ClassesElements.MAIN}`, this._tasksOrigin);
+    this._statistic = new Statistic(`.${ClassesElements.MAIN}`, globalState.tasks);
     this._searchResult = new SearchResult(`.${ClassesElements.MAIN}`, this._onChangeView.bind(this));
     this._noResults = new SearchNoResults();
     this._noTasks = new NoTasks();
@@ -40,48 +37,68 @@ export class Index {
       loadMore: false,
       menuItems: new Map([
         [`control__task`, this._boardContainer],
+        [`control__task--filter`, this._boardContainer],
         [`control__statistic`, this._statistic],
+        [`search`, this._searchResult],
       ]),
-      page: `tasks`
+      page: `control__task`,
     };
+
+    this.init();
   }
 
   init() {
-    AbstractComponent.renderElement(`.${ClassesElements.MAIN_SEARCH_CONTAINER}`, this._filter.getElement(), `insertAfter`);
+    this._memuController.init();
+    this._searchController.init();
     this._statistic.init();
-    this._changeTasksOrder(() => filteringTask[this._state.filter](this._tasksOrigin));
+    this._searchResult.init();
+    this._changeTasksOrder(() => filteringTask[this._state.filter](globalState.tasks));
   }
 
-  _onChangeView(activeMenuItem, add, text) {
-    // Array.from(this._state.menuItems).forEach((it) => it[0] === activeMenuItem ? this._state.menuItems.get(activeMenuItem).show() : this._state.menuItems.get(activeMenuItem).hide());
-
+  _onChangeView(activeMenuItem, add, searchData) {
     switch (activeMenuItem) {
       case `control__task`:
-        this._state.page = `tasks`;
-        this._boardContainer.show();
-        this._statistic.hide();
-        this._searchResult.hide();
+        this._state.menuItems.get(this._state.page).hide();
+        this._state.page = activeMenuItem;
+        this._state.menuItems.get(this._state.page).show();
         this._searchController.searchInputClean();
         break;
+
       case `control__statistic`:
-        this._state.page = `statistics`;
-        this._boardContainer.hide();
-        this._statistic.show();
-        this._searchResult.hide();
+        this._state.menuItems.get(this._state.page).hide();
+        this._state.page = activeMenuItem;
+        this._state.menuItems.get(this._state.page).show();
+        this._searchController.searchInputClean();
         break;
+
       case `search`:
-        this._state.page = `searchResult`;
-        this._boardContainer.hide();
-        this._statistic.hide();
-        this._searchResult.show();
-        if (text.length === 10 && ((text[2] === `.` && text[5] === `.`) || (text[2] === `/` && text[5] === `/`) || (text[2] === `,` && text[5] === `,`))) {
-          this._changeTasksOrder(() => this._tasksOrigin.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === text.replace(/\./g, ``).replace(/\//g, ``).replace(/\,/g, ``)));
-        } else if (text[0] === `#`) {
-          this._changeTasksOrder(() => this._tasksOrigin.filter((it) => it.tags.has(text.slice(1))));
+        const text = searchData.text;
+        const filter = searchData.filter;
+
+        if (text) {
+          this._state.menuItems.get(this._state.page).hide();
+          this._state.page = activeMenuItem;
+          this._state.menuItems.get(this._state.page).show();
+
+          this._tasks = taskFiltering(filter);
+
+          if (text.length === 10 && ((text[2] === `.` && text[5] === `.`) || (text[2] === `/` && text[5] === `/`) || (text[2] === `,` && text[5] === `,`))) {
+            this._changeTasksOrder(() => this._tasks.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === text.replace(/\./g, ``).replace(/\//g, ``).replace(/\,/g, ``)));
+          } else if (text[0] === `#`) {
+            this._changeTasksOrder(() => this._tasks.filter((it) => it.tags.has(text.slice(1))));
+          } else {
+            this._changeTasksOrder(() => this._tasks.filter((it) => it.description.includes(text)));
+          }
+
+          this._searchResult.getElement().querySelector(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`).innerHTML = getSearchResultTitle(text, this._tasks.length);
         } else {
-          this._changeTasksOrder(() => this._tasksOrigin.filter((it) => it.description.includes(text)));
+          this._searchResult.hide();
+          this._state.page = `control__task--filter`;
+          this._tasks = taskFiltering(filter);
+
+          this._changeTasksOrder();
         }
-        this._searchResult.getElement().querySelector(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`).innerHTML = getSearchResultTitle(text, this._tasks.length);
+
         break;
     }
 
@@ -90,17 +107,20 @@ export class Index {
     }
   }
 
-  _changeTasksOrder(fnFilter = () => this._tasks.filter((it) => !it.isArchive)) {
+  _changeTasksOrder(fnFilter) {
+    this._tasks = globalState.tasks;
+
     if (fnFilter) {
       this._tasks = fnFilter();
     }
-    state.reset = this._tasks.length;
+    globalState.reset = this._tasks.length;
     this._moreBtn.removeElement();
     this._state.loadMore = false;
-    if (this._state.page !== `searchResult`) {
-      this._renderTasksBoard(this._tasks);
+
+    if (!this._tasks.length && (this._state.page[`control__task--filter`] || this._state.page[`search`])) {
+      AbstractComponent.renderElement(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`, this._noResults.getElement(), `insertAfter`);
     } else {
-      this._renderSearchResults(this._tasks);
+      this._renderTasksBoard(this._tasks);
     }
   }
 
@@ -112,20 +132,9 @@ export class Index {
     this._renderTask(`.${ClassesElements.BOARD_TASKS}`, tasks ? tasks.slice(0, this._state.amountCards) : null);
   }
 
-  _renderSearchResults(tasks = this._tasks) {
-    const mainSearchResultCardsElement = this._searchResult.getElement().querySelector(`.${ClassesElements.MAIN_SEARCH_RESULT_CARDS}`);
-
-    if (tasks && tasks.length) {
-      mainSearchResultCardsElement.textContent = ``;
-      this._renderTask(mainSearchResultCardsElement, tasks ? tasks.slice(0, this._state.amountCards) : null);
-    } else {
-      AbstractComponent.renderElement(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`, this._noResults.getElement(), `insertAfter`);
-    }
-  }
-
   _renderTask(container, items = (this._tasks ? this._tasks.slice(0, this._state.amountCards) : null)) {
     if (items && items.length) {
-      if (this._state.page !== `searchResult`) {
+      if (this._state.page !== `search`) {
         this._renderFilter();
       }
 
@@ -134,7 +143,7 @@ export class Index {
         taskController.init();
       });
 
-      state.changeRenderCardTask = items.length;
+      globalState.changeRenderCardTask = items.length;
       if (!this._state.loadMore) {
         this._renderLoadMore();
         this._state.loadMore = true;
@@ -146,31 +155,42 @@ export class Index {
   }
 
   _onDataChange(currentData, newDate) {
-    const newDateIndexInTasksOrigin = this._tasksOrigin.findIndex((it) => it === currentData);
-    const newDateIndexInTasks = this._tasks.findIndex((it) => it === currentData);
+    const newDateIndexInTasksOrigin = globalState.tasks.findIndex((it) => it === currentData);
+    // const newDateIndexInTasks = this._tasks.findIndex((it) => it === currentData);
 
     if (!newDate) {
-      this._tasksOrigin.splice(newDateIndexInTasksOrigin, 1);
-      this._tasks.splice(newDateIndexInTasks, 1);
+      globalState.api.deleteTask(this._tasks[newDateIndexInTasksOrigin])
+        .then(() => globalState.api.getTasks())
+        .then((tasks) => globalState.addTasks(tasks))
+        .then(() => this._changeTasksOrder());
     } else if (!currentData) {
-      this._tasksOrigin.unshift(newDate);
-      this._tasks.unshift(newDate);
+      globalState.tasks.unshift(newDate);
+      this._changeTasksOrder();
+    } else if (currentData.isDraft) {
+      globalState.api.createTask(newDate)
+        .then(() => globalState.api.getTasks())
+        .then((tasks) => globalState.addTasks(tasks))
+        .then(() => this._changeTasksOrder());
     } else {
-      this._tasksOrigin[newDateIndexInTasksOrigin] = newDate;
-      this._tasks[newDateIndexInTasks] = newDate;
+      globalState.api.updateTask(newDate)
+        .then(() => globalState.api.getTasks())
+        .then((tasks) => globalState.addTasks(tasks))
+        .then(() => this._changeTasksOrder());
     }
+    // globalState.tasks[newDateIndexInTasksOrigin] = newDate;
+    // this._tasks[newDateIndexInTasks] = newDate;
 
-    this._changeTasksOrder();
+    // this._changeTasksOrder();
   }
 
   _renderFilter() {
-    this._boardFilter.removeElement();
-    AbstractComponent.renderElement(`.${ClassesElements.BOARD}`, this._boardFilter.getElement(), `prepend`);
+    this._sortContainer.removeElement();
+    AbstractComponent.renderElement(`.${ClassesElements.BOARD}`, this._sortContainer.getElement(), `prepend`);
 
     const onFilterItemClick = (evt) => {
       this._state.sort = evt.target.closest(`a`).dataset.type;
       if (this._state.sort === `default`) {
-        this._changeTasksOrder(() => filteringTask[this._state.filter](this._tasksOrigin));
+        this._changeTasksOrder(() => filteringTask[this._state.filter](globalState.tasks));
       } else {
         this._changeTasksOrder(() => [...this._tasks].sort(sortingTasks[this._state.sort]).filter((it) => !it.isArchive));
       }
@@ -181,7 +201,7 @@ export class Index {
 
       filterItem.getElement().addEventListener(`click`, onFilterItemClick);
 
-      AbstractComponent.renderElement(this._boardFilter.getElement(), filterItem.getElement());
+      AbstractComponent.renderElement(this._sortContainer.getElement(), filterItem.getElement());
     });
   }
 
@@ -196,17 +216,17 @@ export class Index {
      * @param {number} amountCardsTasks Количество задач, которое необходимо отрисовать
      */
     const moreTasks = (amountCardsTasks) => {
-      const startRenderCardNumber = state.amountRenderCardTask;
+      const startRenderCardNumber = globalState.amountRenderCardTask;
       let endRenderCardNumber = startRenderCardNumber + amountCardsTasks;
 
-      if (endRenderCardNumber > state.amountAllTasks) {
-        amountCardsTasks = state.amountAllTasks - state.amountRenderCardTask;
+      if (endRenderCardNumber > globalState.amountAllTasks) {
+        amountCardsTasks = globalState.amountAllTasks - globalState.amountRenderCardTask;
         endRenderCardNumber = startRenderCardNumber + amountCardsTasks;
       }
 
       this._renderTask(`.${ClassesElements.BOARD_TASKS}`, this._tasks.slice(startRenderCardNumber, endRenderCardNumber));
 
-      if (state.checkNoRenderCardsTasks <= 0) {
+      if (globalState.checkNoRenderCardsTasks <= 0) {
         removeLoadMoreBtn();
       }
     };

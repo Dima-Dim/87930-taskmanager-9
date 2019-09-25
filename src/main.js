@@ -1,8 +1,10 @@
-import {ALL_TASK_COUNT} from "./components/config";
-import {getTaskData} from "./components/data";
+import {ApiData} from "./components/config";
 import {Index} from "./controllers";
+import Api from "./components/api";
 
-export const state = {
+export const globalState = {
+  api: new Api(ApiData),
+  tasks: [],
   allTasks: 0,
   renderCardTaskCounter: 0,
 
@@ -29,8 +31,17 @@ export const state = {
 
   get checkNoRenderCardsTasks() {
     return this.allTasks - this.amountRenderCardTask;
+  },
+
+  addTasks(tasks) {
+    this.tasks = tasks;
   }
 };
+
+// const api = new Api(ApiData);
+globalState.api.getTasks()
+  .then((tasks) => globalState.addTasks(tasks))
+  .then(() => new Index());
 
 /**
  * Функция для получения массива задач
@@ -39,9 +50,11 @@ export const state = {
  *
  * @return {Array} allTasks массив задач
  */
-const getTasks = (count) => new Array(count).fill(``).map(getTaskData);
+// const getTasks = (count) => new Array(count).fill(``).map(getTaskData);
+//
+// globalState.tasks = getTasks(ALL_TASK_COUNT);
+// console.log(globalState.tasks);
+// console.log(globalState.tasksApi);
 
-const tasks = getTasks(ALL_TASK_COUNT);
-
-const start = new Index(tasks);
-start.init();
+// const start = new Index();
+// start.init();
