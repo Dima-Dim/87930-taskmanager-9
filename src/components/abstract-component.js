@@ -29,6 +29,32 @@ export default class AbstractComponent {
     this.getElement().classList.remove(`visually-hidden`);
   }
 
+  shake() {
+    const ANIMATION_TIME = 600;
+    this.getElement().classList.add(`shake`);
+
+    setTimeout(() => {
+      this.getElement().classList.remove(`shake`);
+    }, ANIMATION_TIME);
+  }
+
+  alarmStyle(active, classInnerElement) {
+    if (classInnerElement) {
+      const innerElement = this.getElement().querySelector(`.${classInnerElement}`);
+      if (active === `remove`) {
+        innerElement.classList.remove(`alarm`);
+      } else {
+        innerElement.classList.add(`alarm`);
+      }
+    } else {
+      if (active === `remove`) {
+        this.getElement().remove(`alarm`);
+      } else {
+        this.getElement().add(`alarm`);
+      }
+    }
+  }
+
   removeElement() {
     if (this._element) {
       AbstractComponent.unRenderElement(this._element);
