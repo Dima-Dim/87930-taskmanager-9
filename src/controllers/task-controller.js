@@ -41,6 +41,19 @@ export default class TaskController {
     const cardEditHashtagList = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_HASHTAG_LIST}`);
     const cardEditColorsWrap = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_EDIT_COLORS_WRAP}`);
     const cardDeleteBtn = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_DELETE_BTN}`);
+    const cardSaveBtn = this._taskEdit.getElement().querySelector(`.${ClassesElements.CARD_SAVE_BTN}`);
+
+    const activeFieldsForm = [
+      cardEditArchive,
+      cardEditFavorites,
+      cardEditDeadLineToggle,
+      cardEditDateInput,
+      cardEditRepeatToggle,
+      cardEditTextAreaBtn,
+      cardEditHashtagInput,
+      cardDeleteBtn,
+      cardSaveBtn,
+    ];
 
     flatpickr(cardEditDateInput, FLATPICKR_CONFIG);
 
@@ -116,9 +129,9 @@ export default class TaskController {
     };
 
     const onClickDeleteBtn = () => {
-      closingCardEditingHandler();
-      this._onDataChange(this._data, null);
-      // this._task.removeElement();
+      cardDeleteBtn.textContent = `Deleting...`;
+      blockForm();
+      this._onDataChange(this._data, null, {success: loadSuccess, error: loadError});
     };
 
     const onClickArchive = () => {
@@ -126,7 +139,8 @@ export default class TaskController {
         const entry = Object.assign({}, this._data);
 
         entry.isArchive = !this._data.isArchive;
-        this._onDataChange(this._data, entry);
+        blockForm();
+        this._onDataChange(this._data, entry, {success: loadSuccess, error: loadError});
       } else {
         this._data.isArchive = !this._data.isArchive;
         cardEditArchive.classList.toggle(ClassesElements.CARD_EDIT_ARCHIVE_DISABLED);
@@ -138,7 +152,8 @@ export default class TaskController {
         const entry = Object.assign({}, this._data);
 
         entry.isFavorite = !this._data.isFavorite;
-        this._onDataChange(this._data, entry);
+        blockForm();
+        this._onDataChange(this._data, entry, {success: loadSuccess, error: loadError});
       } else {
         this._data.isFavorite = !this._data.isFavorite;
         cardEditFavorites.classList.toggle(ClassesElements.CARD_EDIT_FAVORITES_DISABLED);
@@ -147,9 +162,7 @@ export default class TaskController {
 
     const onSubmitTaskEdit = (evt) => {
       evt.preventDefault();
-      closingCardEditingHandler();
       const form = new FormData(this._taskEdit.getElement().querySelector(`form`));
-      console.log(form.get(`date`) * 1000);
       const entry = {
         description: form.get(`text`),
         dueDate: form.get(`date`) * 1000,
@@ -159,8 +172,9 @@ export default class TaskController {
       };
 
       const newData = Object.assign({}, this._data, entry);
-      this._onDataChange(this._data, newData);
-
+      cardSaveBtn.textContent = `Saving...`;
+      blockForm();
+      this._onDataChange(this._data, newData, {success: loadSuccess, error: loadError});
     };
 
     const onClickDeadLineToggle = () => {
@@ -222,6 +236,36 @@ export default class TaskController {
         this._taskEdit.getElement().classList.add(`card--${target.value}`);
         this._state.color = target.value;
       }
+    };
+
+    const blockForm = (action) => {
+      if (action) {
+        activeFieldsForm.forEach((it) => {
+          it.disabled = false;
+        });
+      } else {
+        activeFieldsForm.forEach((it) => {
+          it.disabled = true;
+        });
+      }
+    };
+
+    const loadSuccess = () => {
+      this._taskEdit.alarmStyle(`remove`, ClassesElements.CARD_EDIT_INNER);
+      blockForm();
+      closingCardEditingHandler();
+
+      return true;
+    };
+
+    const loadError = () => {
+      cardSaveBtn.classList.add(`shake`);
+      this._taskEdit.alarmStyle(`on`, ClassesElements.CARD_EDIT_INNER);
+      this._taskEdit.shake();
+      cardSaveBtn.textContent = `Save`;
+      blockForm(`unblock`);
+
+      return true;
     };
 
     cardEditBtn.addEventListener(`click`, onClickTask);

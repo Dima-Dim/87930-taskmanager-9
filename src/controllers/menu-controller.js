@@ -17,7 +17,6 @@ export default class MenuController {
       if (activeMenuItem === `control__new-task`) {
         this._onChange(`control__task`, `add`);
       } else {
-        console.log(activeMenuItem);
         this._onChange(activeMenuItem);
       }
     };

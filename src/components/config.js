@@ -31,6 +31,7 @@ export const ClassesElements = {
   MAIN_SEARCH_RESULT_BACK: `result__back`,
   MAIN_SEARCH_SEARCH_INPUT: `search__input`,
   CARD_REPEAT: `card--repeat`,
+  CARD_EDIT_INNER: `card__inner`,
   CARD_EDIT_BTN: `card__btn--edit`,
   CARD_EDIT_ARCHIVE: `card__btn--archive`,
   CARD_EDIT_ARCHIVE_DISABLED: `card__btn--disabled`,

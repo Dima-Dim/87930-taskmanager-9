@@ -33,6 +33,7 @@ export class Index {
     this._state = {
       amountCards: AMOUNT_CARDS_TASK_FIRST_LOAD,
       filter: `all`,
+      text: null,
       sort: `default`,
       loadMore: false,
       menuItems: new Map([
@@ -72,25 +73,26 @@ export class Index {
         break;
 
       case `search`:
-        const text = searchData.text;
+        this._state.text = searchData.text;
+        this._state.filter = searchData.filter;
         const filter = searchData.filter;
 
-        if (text) {
+        if (this._state.text) {
           this._state.menuItems.get(this._state.page).hide();
           this._state.page = activeMenuItem;
           this._state.menuItems.get(this._state.page).show();
 
           this._tasks = taskFiltering(filter);
 
-          if (text.length === 10 && ((text[2] === `.` && text[5] === `.`) || (text[2] === `/` && text[5] === `/`) || (text[2] === `,` && text[5] === `,`))) {
-            this._changeTasksOrder(() => this._tasks.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === text.replace(/\./g, ``).replace(/\//g, ``).replace(/\,/g, ``)));
-          } else if (text[0] === `#`) {
-            this._changeTasksOrder(() => this._tasks.filter((it) => it.tags.has(text.slice(1))));
+          if (this._state.text.length === 10 && ((this._state.text[2] === `.` && this._state.text[5] === `.`) || (this._state.text[2] === `/` && this._state.text[5] === `/`) || (this._state.text[2] === `,` && this._state.text[5] === `,`))) {
+            this._changeTasksOrder(() => this._tasks.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === this._state.text.replace(/\./g, ``).replace(/\//g, ``).replace(/\,/g, ``)));
+          } else if (this._state.text[0] === `#`) {
+            this._changeTasksOrder(() => this._tasks.filter((it) => it.tags.has(this._state.text.slice(1))));
           } else {
-            this._changeTasksOrder(() => this._tasks.filter((it) => it.description.includes(text)));
+            this._changeTasksOrder(() => this._tasks.filter((it) => it.description.includes(this._state.text)));
           }
 
-          this._searchResult.getElement().querySelector(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`).innerHTML = getSearchResultTitle(text, this._tasks.length);
+          this._searchResult.getElement().querySelector(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`).innerHTML = getSearchResultTitle(this._state.text, this._tasks.length);
         } else {
           this._searchResult.hide();
           this._state.page = `control__task--filter`;
@@ -108,11 +110,10 @@ export class Index {
   }
 
   _changeTasksOrder(fnFilter) {
-    this._tasks = globalState.tasks;
-
     if (fnFilter) {
       this._tasks = fnFilter();
     }
+
     globalState.reset = this._tasks.length;
     this._moreBtn.removeElement();
     this._state.loadMore = false;
@@ -154,33 +155,35 @@ export class Index {
     }
   }
 
-  _onDataChange(currentData, newDate) {
-    const newDateIndexInTasksOrigin = globalState.tasks.findIndex((it) => it === currentData);
-    // const newDateIndexInTasks = this._tasks.findIndex((it) => it === currentData);
-
+  _onDataChange(currentData, newDate, cb) {
     if (!newDate) {
-      globalState.api.deleteTask(this._tasks[newDateIndexInTasksOrigin])
-        .then(() => globalState.api.getTasks())
-        .then((tasks) => globalState.addTasks(tasks))
-        .then(() => this._changeTasksOrder());
+      globalState.api.deleteTask(currentData)
+        .then(() => globalState.api.getTasks()
+          .then((tasks) => globalState.addTasks(tasks))
+          .then(() => cb.success(`delete`))
+          .then(() => (this._tasks = globalState.tasks))
+          .then(() => this._changeTasksOrder()))
+        .catch(() => cb.error());
     } else if (!currentData) {
-      globalState.tasks.unshift(newDate);
+      this._tasks.unshift(newDate);
       this._changeTasksOrder();
     } else if (currentData.isDraft) {
       globalState.api.createTask(newDate)
-        .then(() => globalState.api.getTasks())
-        .then((tasks) => globalState.addTasks(tasks))
-        .then(() => this._changeTasksOrder());
+        .then(() => globalState.api.getTasks()
+          .then((tasks) => globalState.addTasks(tasks))
+          .then(() => cb.success())
+          .then(() => (this._tasks = globalState.tasks))
+          .then(() => this._changeTasksOrder()))
+        .catch(() => cb.error());
     } else {
       globalState.api.updateTask(newDate)
-        .then(() => globalState.api.getTasks())
-        .then((tasks) => globalState.addTasks(tasks))
-        .then(() => this._changeTasksOrder());
+        .then(() => globalState.api.getTasks()
+          .then((tasks) => globalState.addTasks(tasks))
+          .then(() => cb.success())
+          .then(() => (this._tasks = globalState.tasks))
+          .then(() => this._changeTasksOrder()))
+        .catch(() => cb.error());
     }
-    // globalState.tasks[newDateIndexInTasksOrigin] = newDate;
-    // this._tasks[newDateIndexInTasks] = newDate;
-
-    // this._changeTasksOrder();
   }
 
   _renderFilter() {
