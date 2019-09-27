@@ -8,9 +8,9 @@ export default class Store {
     return this._getAll();
   }
 
-  setItem(item) {
+  setItem({id, item}) {
     const items = this._getAll();
-    items[item.id] = item;
+    items[id] = item;
 
     try {
       this._storage.setItem(this._key, JSON.stringify(items));
@@ -20,7 +20,7 @@ export default class Store {
   }
 
   setItems(items) {
-    items.map((it) => this.setItem(it));
+    items.map((it) => this.setItem({id: it.id, item: it}));
   }
 
   removeItem(id) {

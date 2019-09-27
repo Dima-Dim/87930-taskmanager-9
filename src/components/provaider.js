@@ -1,4 +1,4 @@
-import {responseFromJSON, generateId} from "./utils";
+import {responseFromJSON, generateId, objectToArray} from "./utils";
 import TasksAdapter from "./tasks-adapter";
 
 export default class Provider {
@@ -13,7 +13,7 @@ export default class Provider {
         .then(responseFromJSON)
         .then(TasksAdapter.parseTasks)
         .then((tasks) => {
-          this._store.setItems(tasks);
+          this._store.setItems(TasksAdapter.toSources(tasks));
           return tasks;
         });
     } else {
@@ -31,8 +31,8 @@ export default class Provider {
           return task;
         });
     } else {
-      this._store.setItem(generateId(10), JSON.stringify(TasksAdapter.toSource(task)));
-      return TasksAdapter.parseTasks(this._store.getItems());
+      this._store.setItem({id: generateId(10), item: TasksAdapter.toSource(task)});
+      return TasksAdapter.parseTasks(objectToArray(this._store.getItems()));
     }
   }
 
@@ -42,7 +42,7 @@ export default class Provider {
         .then(responseFromJSON)
         .then(TasksAdapter.parseTask)
         .then((it) => {
-          this._store.setItem(it);
+          this._store.setItem(TasksAdapter.toSource(it));
           return task;
         });
     } else {
@@ -62,7 +62,7 @@ export default class Provider {
 
   sync() {
     if (this._isOnline()) {
-      this._api.syncTasks(TasksAdapter.toSources(Object.keys(this._store.getItems())));
+      this._api.syncTasks(TasksAdapter.toSources(objectToArray(this._store.getItems())));
     }
     return Promise.resolve(true);
   }
