@@ -12,9 +12,13 @@ export const HTTPHeaders = {
 };
 
 export const ApiData = {
-  host: `https://htmlacademy-es-9.appspot.com/task-manager`,
-  authorization: `Basic eo0w590ik29889a2`,
+  HOST: `https://htmlacademy-es-9.appspot.com/task-manager`,
+  AUTHORIZATION: `Basic eo0w590ik29889a2`,
+  TASKS: `tasks`,
+  SYNC: `tasks/sync`
 };
+
+export const STORAGE_KEY = `TaskManage`;
 
 export const FILTER_ID_PREFIX = `filter__`;
 

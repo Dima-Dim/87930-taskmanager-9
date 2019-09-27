@@ -170,8 +170,12 @@ export const checkStatus = (response) => {
   }
 };
 
-export const fromJSON = (response) => {
+export const responseFromJSON = (response) => {
   return response.json();
+};
+
+export const toJSON = (response) => {
+  return JSON.stringify(response);
 };
 
 export const repeatingDaysForApi = (data) => {
@@ -181,4 +185,18 @@ export const repeatingDaysForApi = (data) => {
   });
 
   return newObj;
+};
+
+export const generateId = (length = 8) => {
+  const charset = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;
+  let retVal = ``;
+
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
+};
+
+export const objectToArray = (object) => {
+  return Object.keys(object).map((id) => object[id]);
 };

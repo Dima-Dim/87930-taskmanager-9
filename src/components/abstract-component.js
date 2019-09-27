@@ -48,9 +48,9 @@ export default class AbstractComponent {
       }
     } else {
       if (active === `remove`) {
-        this.getElement().remove(`alarm`);
+        this.getElement().classList.remove(`alarm`);
       } else {
-        this.getElement().add(`alarm`);
+        this.getElement().classList.add(`alarm`);
       }
     }
   }

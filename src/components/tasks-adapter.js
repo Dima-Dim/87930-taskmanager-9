@@ -33,4 +33,8 @@ export default class TasksAdapter {
       'is_archived': task.isArchive,
     };
   }
+
+  static toSources(tasks) {
+    return tasks.map(TasksAdapter.toSource);
+  }
 }

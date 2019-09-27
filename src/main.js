@@ -1,9 +1,11 @@
-import {ApiData} from "./components/config";
+import {ApiData, STORAGE_KEY} from "./components/config";
 import {Index} from "./controllers";
 import Api from "./components/api";
+import Provider from "./components/provaider";
+import Store from "./components/store";
 
 export const globalState = {
-  api: new Api(ApiData),
+  provider: new Provider({api: new Api(ApiData), store: new Store(window.localStorage, STORAGE_KEY)}),
   tasks: [],
   allTasks: 0,
   renderCardTaskCounter: 0,
@@ -38,23 +40,6 @@ export const globalState = {
   }
 };
 
-// const api = new Api(ApiData);
-globalState.api.getTasks()
+globalState.provider.getTasks()
   .then((tasks) => globalState.addTasks(tasks))
   .then(() => new Index());
-
-/**
- * Функция для получения массива задач
- *
- * @param {number} count Количество задач, которое необходимо получить
- *
- * @return {Array} allTasks массив задач
- */
-// const getTasks = (count) => new Array(count).fill(``).map(getTaskData);
-//
-// globalState.tasks = getTasks(ALL_TASK_COUNT);
-// console.log(globalState.tasks);
-// console.log(globalState.tasksApi);
-
-// const start = new Index();
-// start.init();
