@@ -147,33 +147,29 @@ export class Index {
     }
   }
 
+  _dataChangeHandler({cb}) {
+    return () => globalState.provider.getTasks()
+      .then((tasks) => globalState.addTasks(tasks))
+      .then(() => cb.success())
+      .then(() => (this._tasks = globalState.tasks))
+      .then(() => this._changeTasksOrder());
+  }
+
   _onDataChange(currentData, newDate, cb) {
     if (!newDate) {
       globalState.provider.removeTask(currentData)
-        .then(() => globalState.provider.getTasks()
-          .then((tasks) => globalState.addTasks(tasks))
-          .then(() => cb.success(`delete`))
-          .then(() => (this._tasks = globalState.tasks))
-          .then(() => this._changeTasksOrder()))
+        .then(this._dataChangeHandler({cb}))
         .catch((err) => cb.error(err));
     } else if (!currentData) {
       this._tasks.unshift(newDate);
       this._changeTasksOrder();
     } else if (currentData.isDraft) {
       globalState.provider.createTask(newDate)
-        .then(() => globalState.provider.getTasks()
-          .then((tasks) => globalState.addTasks(tasks))
-          .then(() => cb.success())
-          .then(() => (this._tasks = globalState.tasks))
-          .then(() => this._changeTasksOrder()))
+        .then(this._dataChangeHandler({cb}))
         .catch((err) => cb.error(err));
     } else {
       globalState.provider.updateTask(newDate)
-        .then(() => globalState.provider.getTasks()
-          .then((tasks) => globalState.addTasks(tasks))
-          .then(() => cb.success())
-          .then(() => (this._tasks = globalState.tasks))
-          .then(() => this._changeTasksOrder()))
+        .then(this._dataChangeHandler({cb}))
         .catch((err) => cb.error(err));
     }
   }
