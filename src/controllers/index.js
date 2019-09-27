@@ -53,7 +53,7 @@ export class Index {
     this._searchController.init();
     this._statistic.init();
     this._searchResult.init();
-    this._changeTasksOrder(() => filteringTask[this._state.filter](globalState.tasks));
+    this._changeTasksOrder();
   }
 
   _onChangeView(activeMenuItem, add, searchData) {
@@ -75,14 +75,11 @@ export class Index {
       case `search`:
         this._state.text = searchData.text;
         this._state.filter = searchData.filter;
-        const filter = searchData.filter;
 
         if (this._state.text) {
           this._state.menuItems.get(this._state.page).hide();
           this._state.page = activeMenuItem;
           this._state.menuItems.get(this._state.page).show();
-
-          this._tasks = taskFiltering(filter);
 
           if (this._state.text.length === 10 && ((this._state.text[2] === `.` && this._state.text[5] === `.`) || (this._state.text[2] === `/` && this._state.text[5] === `/`) || (this._state.text[2] === `,` && this._state.text[5] === `,`))) {
             this._changeTasksOrder(() => this._tasks.filter((it) => getDateForSearchFromTimeStamp(it.dueDate) === this._state.text.replace(/\./g, ``).replace(/\//g, ``).replace(/\,/g, ``)));
@@ -96,7 +93,6 @@ export class Index {
         } else {
           this._searchResult.hide();
           this._state.page = `control__task--filter`;
-          this._tasks = taskFiltering(filter);
 
           this._changeTasksOrder();
         }
@@ -109,11 +105,7 @@ export class Index {
     }
   }
 
-  _changeTasksOrder(fnFilter) {
-    if (fnFilter) {
-      this._tasks = fnFilter();
-    }
-
+  _changeTasksOrder() {
     globalState.reset = this._tasks.length;
     this._moreBtn.removeElement();
     this._state.loadMore = false;
@@ -121,7 +113,7 @@ export class Index {
     if (!this._tasks.length && (this._state.page[`control__task--filter`] || this._state.page[`search`])) {
       AbstractComponent.renderElement(`.${ClassesElements.MAIN_SEARCH_RESULT_TITLE}`, this._noResults.getElement(), `insertAfter`);
     } else {
-      this._renderTasksBoard(this._tasks);
+      this._renderTasksBoard(taskFiltering(this._state.filter));
     }
   }
 
@@ -163,7 +155,7 @@ export class Index {
           .then(() => cb.success(`delete`))
           .then(() => (this._tasks = globalState.tasks))
           .then(() => this._changeTasksOrder()))
-        .catch(() => cb.error());
+        .catch((err) => cb.error(err));
     } else if (!currentData) {
       this._tasks.unshift(newDate);
       this._changeTasksOrder();
@@ -173,9 +165,8 @@ export class Index {
           .then((tasks) => globalState.addTasks(tasks))
           .then(() => cb.success())
           .then(() => (this._tasks = globalState.tasks))
-          .then(() => this._changeTasksOrder())
-        .then(() => globalState.provider.sync()))
-        .catch(() => cb.error());
+          .then(() => this._changeTasksOrder()))
+        .catch((err) => cb.error(err));
     } else {
       globalState.provider.updateTask(newDate)
         .then(() => globalState.provider.getTasks()
@@ -183,7 +174,7 @@ export class Index {
           .then(() => cb.success())
           .then(() => (this._tasks = globalState.tasks))
           .then(() => this._changeTasksOrder()))
-        .catch(() => cb.error());
+        .catch((err) => cb.error(err));
     }
   }
 

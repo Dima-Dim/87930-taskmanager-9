@@ -17,7 +17,7 @@ export default class Provider {
           return tasks;
         });
     } else {
-      return TasksAdapter.parseTasks(this._store.getItems());
+      return Promise.resolve(TasksAdapter.parseTasks(objectToArray(this._store.getItems())));
     }
   }
 
@@ -31,8 +31,9 @@ export default class Provider {
           return task;
         });
     } else {
-      this._store.setItem({id: generateId(10), item: TasksAdapter.toSource(task)});
-      return TasksAdapter.parseTasks(objectToArray(this._store.getItems()));
+      task.id = generateId(10);
+      this._store.setItem({id: task.id, item: TasksAdapter.toSource(task)});
+      return Promise.resolve(TasksAdapter.parseTasks(objectToArray(this._store.getItems())));
     }
   }
 
@@ -47,7 +48,7 @@ export default class Provider {
         });
     } else {
       this._store.setItem(task.id, JSON.stringify(TasksAdapter.toSource(task)));
-      return TasksAdapter.parseTasks(this._store.getItems());
+      return Promise.resolve(TasksAdapter.parseTasks(objectToArray(this._store.getItems())));
     }
   }
 

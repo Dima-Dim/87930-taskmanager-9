@@ -258,7 +258,10 @@ export default class TaskController {
       return true;
     };
 
-    const loadError = () => {
+    const loadError = (err) => {
+      if (err) {
+        throw new Error(err);
+      }
       cardSaveBtn.classList.add(`shake`);
       this._taskEdit.alarmStyle(`on`, ClassesElements.CARD_EDIT_INNER);
       this._taskEdit.shake();

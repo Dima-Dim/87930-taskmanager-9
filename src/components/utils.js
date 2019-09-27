@@ -131,7 +131,7 @@ export const taskFiltering = (filterName) => {
 
   switch (filterName) {
     case `all`:
-      filteredTasks = globalState.tasks;
+      filteredTasks = globalState.tasks.filter((it) => !it.isArchive);
       break;
 
     case `favorites`:
