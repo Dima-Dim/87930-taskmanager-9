@@ -157,8 +157,8 @@ export class Index {
 
   _onDataChange(currentData, newDate, cb) {
     if (!newDate) {
-      globalState.api.deleteTask(currentData)
-        .then(() => globalState.api.getTasks()
+      globalState.provider.removeTask(currentData)
+        .then(() => globalState.provider.getTasks()
           .then((tasks) => globalState.addTasks(tasks))
           .then(() => cb.success(`delete`))
           .then(() => (this._tasks = globalState.tasks))
@@ -168,16 +168,17 @@ export class Index {
       this._tasks.unshift(newDate);
       this._changeTasksOrder();
     } else if (currentData.isDraft) {
-      globalState.api.createTask(newDate)
-        .then(() => globalState.api.getTasks()
+      globalState.provider.createTask(newDate)
+        .then(() => globalState.provider.getTasks()
           .then((tasks) => globalState.addTasks(tasks))
           .then(() => cb.success())
           .then(() => (this._tasks = globalState.tasks))
-          .then(() => this._changeTasksOrder()))
+          .then(() => this._changeTasksOrder())
+        .then(() => globalState.provider.sync()))
         .catch(() => cb.error());
     } else {
-      globalState.api.updateTask(newDate)
-        .then(() => globalState.api.getTasks()
+      globalState.provider.updateTask(newDate)
+        .then(() => globalState.provider.getTasks()
           .then((tasks) => globalState.addTasks(tasks))
           .then(() => cb.success())
           .then(() => (this._tasks = globalState.tasks))
