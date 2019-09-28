@@ -7,12 +7,15 @@ export default class Provider {
     this._store = store;
   }
 
-  getTasks() {
+  getTasks(clear = false) {
     if (this._isOnline()) {
       return this._api.getTasks({path: `tasks`})
         .then(responseFromJSON)
         .then(TasksAdapter.parseTasks)
         .then((tasks) => {
+          if (clear) {
+            this._store.clear();
+          }
           this._store.setItems(TasksAdapter.toSources(tasks));
           return tasks;
         });
@@ -64,7 +67,10 @@ export default class Provider {
 
   sync() {
     if (this._isOnline()) {
-      this._api.syncTasks(objectToArray(this._store.getItems()));
+      return this._api.syncTasks(objectToArray(this._store.getItems()))
+        .then(this.getTasks(true));
+    } else {
+      return Promise.resolve(false);
     }
   }
 

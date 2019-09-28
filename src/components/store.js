@@ -34,6 +34,10 @@ export default class Store {
     }
   }
 
+  clear() {
+    this._storage.removeItem(this._key);
+  }
+
   _getAll() {
     const emptyObj = {};
     let jsonItems = null;

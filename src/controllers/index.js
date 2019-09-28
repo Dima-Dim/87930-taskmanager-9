@@ -54,6 +54,11 @@ export class Index {
     this._statistic.init();
     this._searchResult.init();
     this._changeTasksOrder();
+
+    window.addEventListener(`online`, () => {
+      globalState.provider.sync()
+        .then(this._dataChangeHandler({}));
+    });
   }
 
   _onChangeView(activeMenuItem, add, searchData) {
@@ -150,7 +155,7 @@ export class Index {
   _dataChangeHandler({cb}) {
     return () => globalState.provider.getTasks()
       .then((tasks) => globalState.addTasks(tasks))
-      .then(() => cb.success())
+      .then(() => cb ? cb.success() : ``)
       .then(() => (this._tasks = globalState.tasks))
       .then(() => this._changeTasksOrder());
   }

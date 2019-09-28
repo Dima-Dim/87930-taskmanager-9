@@ -43,7 +43,3 @@ export const globalState = {
 globalState.provider.getTasks()
   .then((tasks) => globalState.addTasks(tasks))
   .then(() => new Index());
-
-window.addEventListener(`online`, () => {
-  globalState.provider.sync();
-});
