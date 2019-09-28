@@ -7,14 +7,15 @@ self.addEventListener(`install`, (evt) => {
   evt.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll([
-            `./`,
-            `./index.html`,
-            `./css/normalize.css`,
-            `./css/style.css`,
-            `./bundle.js`,
-          ])
+          `./`,
+          `./index.html`,
+          `./css/normalize.css`,
+          `./css/style.css`,
+          `./bundle.js`,
+        ])
       )
       .then(() => self.skipWaiting())
+      .catch((err) => new Error(`Cache addAll error: ${err}`))
   );
 });
 
@@ -45,9 +46,10 @@ function fromCache(request, err) {
   console.log(`fromCache`);
 
   return caches.open(CACHE_NAME).then((cache) =>
-    cache.match(request).then((matching) =>
-      matching || Promise.reject('no-match')
-    ))
+    cache.match(request)
+      .then((matching) =>
+        matching || Promise.reject('no-match')
+      ))
     .catch((err) => new Error(`fetch error: ${err}`));
 }
 
