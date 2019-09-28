@@ -59,16 +59,6 @@ function toCache(request, response) {
     .catch((err) => new Error(`Cache put error: ${err}`));
 }
 
-function update(request) {
-  console.log(`request`);
-
-  return caches.open(CACHE).then((cache) =>
-    fetch(request).then((response) =>
-      cache.put(request, response)
-    )
-  );
-}
-
 function fromNetwork(request, timeout) {
   console.log(`fromNetwork`);
 
