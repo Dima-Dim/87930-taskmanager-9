@@ -12,9 +12,10 @@ export default class MenuController {
     AbstractComponent.renderElement(this._container, this._menu.getElement());
 
     const onChangeMenu = () => {
-      const activeMenuItem = this._menu.getElement().querySelector(`input:checked`).id;
+      const activeMenuItem = this._menu.getElement().querySelector(`input:checked`);
 
-      if (activeMenuItem === `control__new-task`) {
+      if (activeMenuItem.id === `control__new-task`) {
+        activeMenuItem.checked = false;
         this._onChange(`control__task`, `add`);
       } else {
         this._onChange(activeMenuItem);
