@@ -24,7 +24,7 @@ self.addEventListener(`activate`, (evt) => {
 });
 
 self.addEventListener(`fetch`, (evt) => {
-  console.log(`Запросили задачи`, {evt, request: evt.request});
+  console.log(`Request tasks`, {evt, request: evt.request});
 
   evt.respondWith(
     fromNetwork(evt.request, TIMEOUT)

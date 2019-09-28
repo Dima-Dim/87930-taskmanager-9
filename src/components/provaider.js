@@ -63,9 +63,8 @@ export default class Provider {
 
   sync() {
     if (this._isOnline()) {
-      this._api.syncTasks(TasksAdapter.toSources(objectToArray(this._store.getItems())));
+      this._api.syncTasks(objectToArray(this._store.getItems()));
     }
-    return Promise.resolve(true);
   }
 
   _isOnline() {

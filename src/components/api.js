@@ -45,7 +45,7 @@ export default class Api {
     return this._load({
       path: this._paths.sync,
       method: HTTPMethod.POST,
-      body: JSON.stringify(TasksAdapter.toSources(tasks)),
+      body: JSON.stringify(tasks),
       headers: new Headers(HTTPHeaders.JSON)
     });
   }
