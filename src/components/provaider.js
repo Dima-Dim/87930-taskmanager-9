@@ -47,7 +47,7 @@ export default class Provider {
           return task;
         });
     } else {
-      this._store.setItem(task.id, JSON.stringify(TasksAdapter.toSource(task)));
+      this._store.setItem({id: task.id, item: JSON.stringify(TasksAdapter.toSource(task))});
       return Promise.resolve(TasksAdapter.parseTasks(objectToArray(this._store.getItems())));
     }
   }
