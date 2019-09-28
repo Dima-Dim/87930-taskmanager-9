@@ -1,4 +1,4 @@
-const CACHE_NAME = `TASK_MANAGER_v2.7`;
+const CACHE_NAME = `TASK_MANAGER_v2.8`;
 const TIMEOUT = 1000;
 
 self.addEventListener(`install`, (evt) => {
@@ -6,21 +6,21 @@ self.addEventListener(`install`, (evt) => {
 
   evt.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-          return cache.addAll([
+      .then((cache) => cache.addAll([
             `./`,
             `./index.html`,
             `./css/normalize.css`,
             `./css/style.css`,
             `./bundle.js`,
-          ]);
-        }
+          ])
       )
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener(`activate`, (evt) => {
   console.log(`sw, activate`, {evt});
+  evt.waitUntil(self.clients.claim());
 });
 
 self.addEventListener(`fetch`, (evt) => {
