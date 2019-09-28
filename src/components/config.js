@@ -20,6 +20,20 @@ export const ApiData = {
 
 export const STORAGE_KEY = `TaskManage`;
 
+export const NetWorkStatus = {
+  online: `online`,
+  offline: `offline`
+};
+
+export const StatusTitle = {
+  offline: () => {
+    document.title = `${document.title} [OFFLINE]`;
+  },
+  online: () => {
+    document.title = document.title.split(` [OFFLINE]`)[0];
+  },
+};
+
 export const FILTER_ID_PREFIX = `filter__`;
 
 export const ClassesElements = {

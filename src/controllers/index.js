@@ -1,4 +1,4 @@
-import {AMOUNT_CARDS_TASK_FIRST_LOAD, ClassesElements, sortTypes, LOAD_MORE_COUNT} from "../components/config";
+import {AMOUNT_CARDS_TASK_FIRST_LOAD, ClassesElements, sortTypes, LOAD_MORE_COUNT, StatusTitle, NetWorkStatus} from "../components/config";
 import {globalState} from "../main";
 import AbstractComponent from "../components/abstract-component";
 import BoardContainer from "../components/board-container";
@@ -55,10 +55,20 @@ export class Index {
     this._searchResult.init();
     this._changeTasksOrder();
 
-    window.addEventListener(`online`, () => {
+    window.addEventListener(`offline`, this._changeNetWorkStatus);
+    window.addEventListener(`online`, this._changeNetWorkStatus);
+  }
+
+  _changeNetWorkStatus(evt) {
+    if (evt.type === NetWorkStatus.online) {
+      window.removeEventListener(`offline`, this._changeNetWorkStatus);
+      StatusTitle[evt.type]();
       globalState.provider.sync()
         .then(this._dataChangeHandler({}));
-    });
+    } else {
+      StatusTitle[evt.type]();
+      window.addEventListener(`online`, this._changeNetWorkStatus);
+    }
   }
 
   _onChangeView(activeMenuItem, add, searchData) {

@@ -66,6 +66,7 @@ function fromNetwork(request, timeout) {
 
   return new Promise((fulfill, reject) => {
     let timeoutId = setTimeout(reject, timeout);
+
     fetch(request).then((response) => {
       clearTimeout(timeoutId);
       fulfill(response);
