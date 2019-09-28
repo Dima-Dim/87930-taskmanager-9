@@ -53,8 +53,9 @@ export default class Provider {
   }
 
   removeTask({id}) {
+    this._store.removeItem(id);
+
     if (this._isOnline()) {
-      this._store.removeItem(id);
       return this._api.deleteTask({id});
     } else {
       return Promise.resolve(true);
